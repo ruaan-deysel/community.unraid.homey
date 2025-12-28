@@ -1,0 +1,26 @@
+{
+  "id": "parity-completed",
+  "title": {
+    "en": "Parity check completed"
+  },
+  "hint": {
+    "en": "Triggered when a parity check completes."
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=unraid-server"
+    }
+  ],
+  "tokens": [
+    {
+      "name": "errors",
+      "type": "number",
+      "title": {
+        "en": "Errors Found"
+      },
+      "example": 0
+    }
+  ]
+}

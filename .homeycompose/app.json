@@ -6,11 +6,12 @@
   "platforms": [
     "local"
   ],
+  "brandColor": "#F15A2C",
   "name": {
     "en": "Unraid"
   },
   "description": {
-    "en": "Adds support for monitoring and controlling Unraid servers"
+    "en": "Monitor and control your Unraid server"
   },
   "category": [
     "tools"
@@ -24,5 +25,26 @@
   "author": {
     "name": "Ruaan Deysel",
     "email": "ruaan.deysel@gmail.com"
-  }
+  },
+  "contributors": {
+    "developers": [
+      {
+        "name": "Ruaan Deysel",
+        "email": "ruaan.deysel@gmail.com"
+      }
+    ]
+  },
+  "contributing": {
+    "donate": {
+      "githubSponsors": {
+        "username": "ruaan-deysel"
+      }
+    }
+  },
+  "bugs": {
+    "url": "https://github.com/ruaan-deysel/com.unraid/issues"
+  },
+  "source": "https://github.com/ruaan-deysel/com.unraid",
+  "homepage": "https://github.com/ruaan-deysel/com.unraid",
+  "support": "https://github.com/ruaan-deysel/com.unraid/issues"
 }

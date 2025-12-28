@@ -1,0 +1,29 @@
+{
+  "id": "stop-container",
+  "title": {
+    "en": "Stop Docker container"
+  },
+  "titleFormatted": {
+    "en": "Stop Docker container [[container_name]]"
+  },
+  "hint": {
+    "en": "Stop a Docker container by name."
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=unraid-server"
+    },
+    {
+      "type": "autocomplete",
+      "name": "container_name",
+      "title": {
+        "en": "Container"
+      },
+      "placeholder": {
+        "en": "Select container..."
+      }
+    }
+  ]
+}

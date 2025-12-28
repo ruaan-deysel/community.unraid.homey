@@ -1,0 +1,15 @@
+{
+  "type": "number",
+  "title": {
+    "en": "Active Notifications"
+  },
+  "desc": {
+    "en": "Number of unread notifications"
+  },
+  "insights": true,
+  "getable": true,
+  "setable": false,
+  "min": 0,
+  "step": 1,
+  "icon": "/assets/icons/notification.svg"
+}

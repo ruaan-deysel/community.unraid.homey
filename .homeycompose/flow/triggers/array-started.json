@@ -1,0 +1,16 @@
+{
+  "id": "array-started",
+  "title": {
+    "en": "Array started"
+  },
+  "hint": {
+    "en": "Triggered when the storage array starts."
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=unraid-server"
+    }
+  ]
+}

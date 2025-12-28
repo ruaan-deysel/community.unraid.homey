@@ -1,0 +1,11 @@
+{
+  "type": "number",
+  "title": {
+    "en": "Running VMs"
+  },
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor",
+  "icon": "/assets/icons/vm.svg",
+  "insights": true
+}

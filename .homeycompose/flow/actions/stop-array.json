@@ -1,0 +1,16 @@
+{
+  "id": "stop-array",
+  "title": {
+    "en": "Stop array"
+  },
+  "hint": {
+    "en": "Stop the Unraid storage array. WARNING: This will affect all containers and VMs using array storage."
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=unraid-server"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "type": "enum",
+  "title": {
+    "en": "Array Status"
+  },
+  "desc": {
+    "en": "Current storage array status"
+  },
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor",
+  "values": [
+    {
+      "id": "started",
+      "title": {
+        "en": "Started"
+      }
+    },
+    {
+      "id": "stopped",
+      "title": {
+        "en": "Stopped"
+      }
+    },
+    {
+      "id": "starting",
+      "title": {
+        "en": "Starting"
+      }
+    },
+    {
+      "id": "stopping",
+      "title": {
+        "en": "Stopping"
+      }
+    },
+    {
+      "id": "error",
+      "title": {
+        "en": "Error"
+      }
+    }
+  ],
+  "icon": "/assets/icons/array-status.svg"
+}

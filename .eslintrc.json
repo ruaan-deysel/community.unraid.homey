@@ -3,13 +3,34 @@
     "es2021": true,
     "node": true
   },
-  "extends": ["eslint:recommended", "prettier"],
+  "extends": ["athom/homey-app", "prettier"],
   "parserOptions": {
-    "ecmaVersion": 12,
+    "ecmaVersion": 2021,
     "sourceType": "module"
+  },
+  "ignorePatterns": ["tests/", "vitest.config.ts", "coverage/", ".homeybuild/"],
+  "settings": {
+    "node": {
+      "version": ">=16.0.0"
+    }
   },
   "rules": {
     "no-unused-vars": ["warn", { "args": "none" }],
-    "no-console": "off"
+    "no-console": "off",
+    "node/no-unsupported-features/es-syntax": "off",
+    "node/no-missing-import": "off",
+    "node/no-unpublished-import": "off",
+    "import/no-unresolved": "off",
+    "import/extensions": "off",
+    "import/no-cycle": "off",
+    "import/named": "off",
+    "import/no-extraneous-dependencies": "off",
+    "import/no-duplicates": "off",
+    "import/order": "off",
+    "import/no-self-import": "off",
+    "import/export": "off",
+    "import/no-useless-path-segments": "off",
+    "import/no-named-as-default": "off",
+    "import/no-named-as-default-member": "off"
   }
 }

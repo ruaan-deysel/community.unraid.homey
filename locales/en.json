@@ -1,1 +1,128 @@
-{}
+{
+  "pair": {
+    "host": {
+      "title": "Server Address",
+      "description": "Enter the IP address or hostname of your Unraid server.",
+      "label": "Server Address",
+      "hint": "This is the same address you use to access the Unraid web UI",
+      "advanced": "Advanced Options ▼",
+      "port": "Port",
+      "port_hint": "Default: 443 for HTTPS",
+      "use_https": "Use HTTPS (recommended)"
+    },
+    "api_key": {
+      "title": "API Key",
+      "description": "Enter your Unraid Connect API key to authenticate with your server.",
+      "label": "API Key",
+      "hint": "Your API key is stored securely and only used to communicate with your Unraid server",
+      "instructions_title": "How to get your API key:",
+      "step1": "Open your Unraid web UI",
+      "step2": "Go to Settings → Management Access",
+      "step3": "Scroll down to \"API Keys\"",
+      "step4": "Click \"Create API Key\" and give it a name (e.g., \"Homey\")",
+      "step5": "Copy the generated key and paste it below"
+    },
+    "test": {
+      "title": "Test Connection",
+      "testing": "Testing Connection...",
+      "testing_message": "Please wait while we connect to your Unraid server.",
+      "success": "Connected!",
+      "success_message": "Successfully connected to your Unraid server.",
+      "error": "Connection Failed",
+      "error_message": "Unable to connect to your Unraid server.",
+      "error_auth": "Invalid API key. Please check your credentials.",
+      "error_connection": "Could not reach the server. Please check the address.",
+      "error_timeout": "Connection timed out. The server may be unreachable.",
+      "hostname": "Hostname",
+      "version": "Unraid Version",
+      "uptime": "Uptime",
+      "retry": "Try Again"
+    },
+    "errors": {
+      "connection_failed": "Could not connect to the Unraid server. Please verify the address and try again.",
+      "invalid_credentials": "Invalid API key. Please check your credentials.",
+      "timeout": "Connection timed out. Please check that the server is reachable."
+    }
+  },
+  "device": {
+    "errors": {
+      "init_failed": "Failed to initialize device. Please check your connection settings.",
+      "connection_lost": "Connection to Unraid server lost.",
+      "poll_failed": "Failed to retrieve server information."
+    }
+  },
+  "capabilities": {
+    "cpu_usage": {
+      "title": "CPU Usage"
+    },
+    "cpu_temperature": {
+      "title": "CPU Temperature"
+    },
+    "memory_usage": {
+      "title": "Memory Usage"
+    },
+    "array_status": {
+      "title": "Array Status"
+    },
+    "array_usage": {
+      "title": "Array Usage"
+    },
+    "storage_used": {
+      "title": "Storage Used"
+    },
+    "storage_free": {
+      "title": "Storage Free"
+    },
+    "parity_status": {
+      "title": "Parity Status"
+    },
+    "disk_health": {
+      "title": "Disk Health"
+    }
+  },
+  "drivers": {
+    "unraid-server": {
+      "name": "Unraid Server"
+    },
+    "docker-container": {
+      "name": "Docker Container"
+    },
+    "virtual-machine": {
+      "name": "Virtual Machine"
+    }
+  },
+  "container": {
+    "errors": {
+      "control_not_supported": "Container control is not supported in this version. The app is monitoring-only.",
+      "removed": "Container has been removed from the server."
+    }
+  },
+  "vm": {
+    "errors": {
+      "control_not_supported": "VM control is not supported in this version. The app is monitoring-only.",
+      "removed": "VM has been removed from the server."
+    }
+  },
+  "settings": {
+    "host": {
+      "label": "Server Address",
+      "hint": "IP address or hostname of your Unraid server"
+    },
+    "port": {
+      "label": "Port",
+      "hint": "GraphQL API port (default: 443 for HTTPS)"
+    },
+    "useHttps": {
+      "label": "Use HTTPS",
+      "hint": "Connect securely via HTTPS"
+    },
+    "systemPollInterval": {
+      "label": "System Poll Interval (seconds)",
+      "hint": "How often to poll CPU, memory, and temperature"
+    },
+    "storagePollInterval": {
+      "label": "Storage Poll Interval (seconds)",
+      "hint": "How often to poll storage and array information"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "id": "parity-check-running",
+  "title": {
+    "en": "Parity check is running"
+  },
+  "hint": {
+    "en": "Check if a parity check is currently running."
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=unraid-server"
+    }
+  ]
+}

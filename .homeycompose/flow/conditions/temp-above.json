@@ -1,0 +1,32 @@
+{
+  "id": "temp-above",
+  "title": {
+    "en": "Temperature is above"
+  },
+  "titleFormatted": {
+    "en": "CPU temperature is above [[threshold]]°C"
+  },
+  "hint": {
+    "en": "This card triggers when the CPU temperature is above a specified threshold."
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=unraid-server"
+    },
+    {
+      "type": "number",
+      "name": "threshold",
+      "title": {
+        "en": "Threshold"
+      },
+      "placeholder": {
+        "en": "70"
+      },
+      "min": 0,
+      "max": 100,
+      "step": 1
+    }
+  ]
+}

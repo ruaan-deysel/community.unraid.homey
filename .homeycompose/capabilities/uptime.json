@@ -1,0 +1,12 @@
+{
+  "type": "string",
+  "title": {
+    "en": "Uptime"
+  },
+  "desc": {
+    "en": "System uptime since last boot"
+  },
+  "getable": true,
+  "setable": false,
+  "icon": "/assets/icons/uptime.svg"
+}

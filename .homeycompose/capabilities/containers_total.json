@@ -1,0 +1,11 @@
+{
+  "type": "number",
+  "title": {
+    "en": "Total Containers"
+  },
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor",
+  "icon": "/assets/icons/docker.svg",
+  "insights": true
+}

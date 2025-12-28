@@ -1,0 +1,29 @@
+{
+  "id": "start-container",
+  "title": {
+    "en": "Start Docker container"
+  },
+  "titleFormatted": {
+    "en": "Start Docker container [[container_name]]"
+  },
+  "hint": {
+    "en": "Start a Docker container by name."
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=unraid-server"
+    },
+    {
+      "type": "autocomplete",
+      "name": "container_name",
+      "title": {
+        "en": "Container"
+      },
+      "placeholder": {
+        "en": "Select container..."
+      }
+    }
+  ]
+}

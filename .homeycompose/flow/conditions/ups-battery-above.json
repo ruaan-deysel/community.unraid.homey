@@ -1,0 +1,32 @@
+{
+  "id": "ups-battery-above",
+  "title": {
+    "en": "UPS battery is above"
+  },
+  "titleFormatted": {
+    "en": "UPS battery is above [[threshold]]%"
+  },
+  "hint": {
+    "en": "Check if the UPS battery level is above a threshold."
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=unraid-server"
+    },
+    {
+      "type": "number",
+      "name": "threshold",
+      "title": {
+        "en": "Threshold"
+      },
+      "placeholder": {
+        "en": "20"
+      },
+      "min": 0,
+      "max": 100,
+      "step": 1
+    }
+  ]
+}

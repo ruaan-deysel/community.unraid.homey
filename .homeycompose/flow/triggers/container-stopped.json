@@ -1,0 +1,34 @@
+{
+  "id": "container-stopped",
+  "title": {
+    "en": "Docker container stopped"
+  },
+  "hint": {
+    "en": "Triggered when a Docker container stops running."
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=unraid-server"
+    }
+  ],
+  "tokens": [
+    {
+      "name": "container_name",
+      "type": "string",
+      "title": {
+        "en": "Container Name"
+      },
+      "example": "plex"
+    },
+    {
+      "name": "container_id",
+      "type": "string",
+      "title": {
+        "en": "Container ID"
+      },
+      "example": "abc123"
+    }
+  ]
+}

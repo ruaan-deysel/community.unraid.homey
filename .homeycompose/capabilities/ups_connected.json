@@ -1,0 +1,12 @@
+{
+  "type": "boolean",
+  "title": {
+    "en": "UPS Connected"
+  },
+  "desc": {
+    "en": "Whether the UPS is connected and online"
+  },
+  "getable": true,
+  "setable": false,
+  "icon": "/assets/icons/ups.svg"
+}

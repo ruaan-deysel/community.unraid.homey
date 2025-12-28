@@ -1,0 +1,52 @@
+{
+  "id": "array-state",
+  "title": {
+    "en": "Array state is"
+  },
+  "titleFormatted": {
+    "en": "Array state is [[state]]"
+  },
+  "hint": {
+    "en": "Check if the array is in a specific state (started, stopped, etc.)."
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=unraid-server"
+    },
+    {
+      "type": "dropdown",
+      "name": "state",
+      "title": {
+        "en": "State"
+      },
+      "values": [
+        {
+          "id": "started",
+          "label": {
+            "en": "Started"
+          }
+        },
+        {
+          "id": "stopped",
+          "label": {
+            "en": "Stopped"
+          }
+        },
+        {
+          "id": "starting",
+          "label": {
+            "en": "Starting"
+          }
+        },
+        {
+          "id": "stopping",
+          "label": {
+            "en": "Stopping"
+          }
+        }
+      ]
+    }
+  ]
+}

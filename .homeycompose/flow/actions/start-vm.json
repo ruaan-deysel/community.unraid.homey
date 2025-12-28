@@ -1,0 +1,29 @@
+{
+  "id": "start-vm",
+  "title": {
+    "en": "Start virtual machine"
+  },
+  "titleFormatted": {
+    "en": "Start virtual machine [[vm_name]]"
+  },
+  "hint": {
+    "en": "Start a virtual machine by name."
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=unraid-server"
+    },
+    {
+      "type": "autocomplete",
+      "name": "vm_name",
+      "title": {
+        "en": "Virtual Machine"
+      },
+      "placeholder": {
+        "en": "Select VM..."
+      }
+    }
+  ]
+}

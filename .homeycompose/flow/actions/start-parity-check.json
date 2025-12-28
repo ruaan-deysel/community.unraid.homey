@@ -1,0 +1,16 @@
+{
+  "id": "start-parity-check",
+  "title": {
+    "en": "Start parity check"
+  },
+  "hint": {
+    "en": "Start a parity check operation (read-only, no corrections)."
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=unraid-server"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "start-array",
+  "title": {
+    "en": "Start array"
+  },
+  "hint": {
+    "en": "Start the Unraid storage array. Use with caution."
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=unraid-server"
+    }
+  ]
+}

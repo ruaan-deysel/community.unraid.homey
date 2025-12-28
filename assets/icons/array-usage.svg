@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path d="M3 13h18v-2H3v2zm0 7h18v-2H3v2zm0-12h18V6H3v2z" fill="currentColor"/>
+  <rect x="18" y="7" width="3" height="2" fill="currentColor" opacity="0.5"/>
+  <rect x="18" y="11" width="3" height="2" fill="currentColor" opacity="0.5"/>
+  <rect x="18" y="15" width="3" height="2" fill="currentColor" opacity="0.5"/>
+</svg>

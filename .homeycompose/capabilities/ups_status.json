@@ -1,0 +1,12 @@
+{
+  "type": "string",
+  "title": {
+    "en": "UPS Status"
+  },
+  "desc": {
+    "en": "Current UPS status (Online, On Battery, etc.)"
+  },
+  "getable": true,
+  "setable": false,
+  "icon": "/assets/icons/ups.svg"
+}

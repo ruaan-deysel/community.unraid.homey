@@ -1,0 +1,29 @@
+{
+  "id": "stop-vm",
+  "title": {
+    "en": "Stop virtual machine"
+  },
+  "titleFormatted": {
+    "en": "Stop virtual machine [[vm_name]]"
+  },
+  "hint": {
+    "en": "Stop a virtual machine by name."
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=unraid-server"
+    },
+    {
+      "type": "autocomplete",
+      "name": "vm_name",
+      "title": {
+        "en": "Virtual Machine"
+      },
+      "placeholder": {
+        "en": "Select VM..."
+      }
+    }
+  ]
+}

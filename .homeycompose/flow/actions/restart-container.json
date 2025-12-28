@@ -1,0 +1,29 @@
+{
+  "id": "restart-container",
+  "title": {
+    "en": "Restart Docker container"
+  },
+  "titleFormatted": {
+    "en": "Restart Docker container [[container_name]]"
+  },
+  "hint": {
+    "en": "Restart a Docker container by name."
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=unraid-server"
+    },
+    {
+      "type": "autocomplete",
+      "name": "container_name",
+      "title": {
+        "en": "Container"
+      },
+      "placeholder": {
+        "en": "Select container..."
+      }
+    }
+  ]
+}

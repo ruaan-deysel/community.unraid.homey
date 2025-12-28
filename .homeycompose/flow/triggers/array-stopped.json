@@ -1,0 +1,16 @@
+{
+  "id": "array-stopped",
+  "title": {
+    "en": "Array stopped"
+  },
+  "hint": {
+    "en": "Triggered when the storage array stops."
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=unraid-server"
+    }
+  ]
+}

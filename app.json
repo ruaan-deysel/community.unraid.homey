@@ -1,3 +1,1737 @@
 {
-  "_comment": "This file is generated. Please edit .homeycompose/app.json instead."
+  "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
+  "id": "com.unraid",
+  "version": "1.0.0",
+  "compatibility": ">=12.4.0",
+  "sdk": 3,
+  "platforms": [
+    "local"
+  ],
+  "brandColor": "#F15A2C",
+  "name": {
+    "en": "Unraid"
+  },
+  "description": {
+    "en": "Monitor and control your Unraid server"
+  },
+  "category": [
+    "tools"
+  ],
+  "permissions": [],
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png",
+    "xlarge": "/assets/images/xlarge.png"
+  },
+  "author": {
+    "name": "Ruaan Deysel",
+    "email": "ruaan.deysel@gmail.com"
+  },
+  "contributors": {
+    "developers": [
+      {
+        "name": "Ruaan Deysel",
+        "email": "ruaan.deysel@gmail.com"
+      }
+    ]
+  },
+  "contributing": {
+    "donate": {
+      "githubSponsors": {
+        "username": "ruaan-deysel"
+      }
+    }
+  },
+  "bugs": {
+    "url": "https://github.com/ruaan-deysel/com.unraid/issues"
+  },
+  "source": "https://github.com/ruaan-deysel/com.unraid",
+  "homepage": "https://github.com/ruaan-deysel/com.unraid",
+  "support": "https://github.com/ruaan-deysel/com.unraid/issues",
+  "flow": {
+    "triggers": [
+      {
+        "id": "array-started",
+        "title": {
+          "en": "Array started"
+        },
+        "hint": {
+          "en": "Triggered when the storage array starts."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          }
+        ]
+      },
+      {
+        "id": "array-stopped",
+        "title": {
+          "en": "Array stopped"
+        },
+        "hint": {
+          "en": "Triggered when the storage array stops."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          }
+        ]
+      },
+      {
+        "id": "container-started",
+        "title": {
+          "en": "Docker container started"
+        },
+        "hint": {
+          "en": "Triggered when a Docker container starts running."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          }
+        ],
+        "tokens": [
+          {
+            "name": "container_name",
+            "type": "string",
+            "title": {
+              "en": "Container Name"
+            },
+            "example": "plex"
+          },
+          {
+            "name": "container_id",
+            "type": "string",
+            "title": {
+              "en": "Container ID"
+            },
+            "example": "abc123"
+          }
+        ]
+      },
+      {
+        "id": "container-stopped",
+        "title": {
+          "en": "Docker container stopped"
+        },
+        "hint": {
+          "en": "Triggered when a Docker container stops running."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          }
+        ],
+        "tokens": [
+          {
+            "name": "container_name",
+            "type": "string",
+            "title": {
+              "en": "Container Name"
+            },
+            "example": "plex"
+          },
+          {
+            "name": "container_id",
+            "type": "string",
+            "title": {
+              "en": "Container ID"
+            },
+            "example": "abc123"
+          }
+        ]
+      },
+      {
+        "id": "disk-temp-high",
+        "title": {
+          "en": "Disk temperature high"
+        },
+        "hint": {
+          "en": "Triggered when a disk temperature exceeds the warning threshold."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          }
+        ],
+        "tokens": [
+          {
+            "name": "disk_name",
+            "type": "string",
+            "title": {
+              "en": "Disk Name"
+            },
+            "example": "disk1"
+          },
+          {
+            "name": "temperature",
+            "type": "number",
+            "title": {
+              "en": "Temperature (°C)"
+            },
+            "example": 55
+          }
+        ]
+      },
+      {
+        "id": "disk-warning",
+        "title": {
+          "en": "Disk health warning"
+        },
+        "hint": {
+          "en": "Triggered when a disk reports health issues or SMART errors."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          }
+        ],
+        "tokens": [
+          {
+            "name": "disk_name",
+            "type": "string",
+            "title": {
+              "en": "Disk Name"
+            },
+            "example": "disk1"
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "title": {
+              "en": "Status"
+            },
+            "example": "warning"
+          }
+        ]
+      },
+      {
+        "id": "parity-completed",
+        "title": {
+          "en": "Parity check completed"
+        },
+        "hint": {
+          "en": "Triggered when a parity check completes."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          }
+        ],
+        "tokens": [
+          {
+            "name": "errors",
+            "type": "number",
+            "title": {
+              "en": "Errors Found"
+            },
+            "example": 0
+          }
+        ]
+      },
+      {
+        "id": "parity-started",
+        "title": {
+          "en": "Parity check started"
+        },
+        "hint": {
+          "en": "Triggered when a parity check begins on the server."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          }
+        ],
+        "tokens": [
+          {
+            "name": "progress",
+            "type": "number",
+            "title": {
+              "en": "Progress"
+            },
+            "example": 0
+          }
+        ]
+      },
+      {
+        "id": "share-usage-high",
+        "title": {
+          "en": "Share usage high"
+        },
+        "hint": {
+          "en": "Triggered when a share's usage exceeds 90%."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          }
+        ],
+        "tokens": [
+          {
+            "name": "share_name",
+            "type": "string",
+            "title": {
+              "en": "Share Name"
+            },
+            "example": "appdata"
+          },
+          {
+            "name": "usage_percent",
+            "type": "number",
+            "title": {
+              "en": "Usage (%)"
+            },
+            "example": 95
+          }
+        ]
+      },
+      {
+        "id": "ups-back-online",
+        "title": {
+          "en": "UPS back on mains power"
+        },
+        "hint": {
+          "en": "Triggered when the UPS switches back to mains power from battery."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          }
+        ],
+        "tokens": [
+          {
+            "name": "battery_level",
+            "type": "number",
+            "title": {
+              "en": "Battery Level"
+            },
+            "example": 85
+          }
+        ]
+      },
+      {
+        "id": "ups-low-battery",
+        "title": {
+          "en": "UPS battery low"
+        },
+        "hint": {
+          "en": "Triggered when the UPS battery level falls below 20%."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          }
+        ],
+        "tokens": [
+          {
+            "name": "battery_level",
+            "type": "number",
+            "title": {
+              "en": "Battery Level"
+            },
+            "example": 15
+          },
+          {
+            "name": "runtime",
+            "type": "number",
+            "title": {
+              "en": "Runtime (min)"
+            },
+            "example": 5
+          }
+        ]
+      },
+      {
+        "id": "ups-on-battery",
+        "title": {
+          "en": "UPS switched to battery"
+        },
+        "hint": {
+          "en": "Triggered when the UPS switches from mains power to battery power."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          }
+        ],
+        "tokens": [
+          {
+            "name": "battery_level",
+            "type": "number",
+            "title": {
+              "en": "Battery Level"
+            },
+            "example": 100
+          },
+          {
+            "name": "runtime",
+            "type": "number",
+            "title": {
+              "en": "Runtime (min)"
+            },
+            "example": 30
+          }
+        ]
+      },
+      {
+        "id": "vm-started",
+        "title": {
+          "en": "Virtual machine started"
+        },
+        "hint": {
+          "en": "Triggered when a virtual machine starts running."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          }
+        ],
+        "tokens": [
+          {
+            "name": "vm_name",
+            "type": "string",
+            "title": {
+              "en": "VM Name"
+            },
+            "example": "Windows10"
+          },
+          {
+            "name": "vm_id",
+            "type": "string",
+            "title": {
+              "en": "VM ID"
+            },
+            "example": "abc123"
+          }
+        ]
+      },
+      {
+        "id": "vm-stopped",
+        "title": {
+          "en": "Virtual machine stopped"
+        },
+        "hint": {
+          "en": "Triggered when a virtual machine stops running."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          }
+        ],
+        "tokens": [
+          {
+            "name": "vm_name",
+            "type": "string",
+            "title": {
+              "en": "VM Name"
+            },
+            "example": "Windows10"
+          },
+          {
+            "name": "vm_id",
+            "type": "string",
+            "title": {
+              "en": "VM ID"
+            },
+            "example": "abc123"
+          }
+        ]
+      }
+    ],
+    "conditions": [
+      {
+        "id": "array-state",
+        "title": {
+          "en": "Array state is"
+        },
+        "titleFormatted": {
+          "en": "Array state is [[state]]"
+        },
+        "hint": {
+          "en": "Check if the array is in a specific state (started, stopped, etc.)."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          },
+          {
+            "type": "dropdown",
+            "name": "state",
+            "title": {
+              "en": "State"
+            },
+            "values": [
+              {
+                "id": "started",
+                "label": {
+                  "en": "Started"
+                }
+              },
+              {
+                "id": "stopped",
+                "label": {
+                  "en": "Stopped"
+                }
+              },
+              {
+                "id": "starting",
+                "label": {
+                  "en": "Starting"
+                }
+              },
+              {
+                "id": "stopping",
+                "label": {
+                  "en": "Stopping"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "container-running",
+        "title": {
+          "en": "Docker container is running"
+        },
+        "titleFormatted": {
+          "en": "Container [[container_name]] is running"
+        },
+        "hint": {
+          "en": "Check if a specific Docker container is running."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          },
+          {
+            "type": "autocomplete",
+            "name": "container_name",
+            "title": {
+              "en": "Container"
+            },
+            "placeholder": {
+              "en": "Select container..."
+            }
+          }
+        ]
+      },
+      {
+        "id": "cpu-above",
+        "title": {
+          "en": "CPU usage is above"
+        },
+        "titleFormatted": {
+          "en": "CPU usage is above [[threshold]]%"
+        },
+        "hint": {
+          "en": "This card triggers when the CPU usage is above a specified threshold."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          },
+          {
+            "type": "number",
+            "name": "threshold",
+            "title": {
+              "en": "Threshold"
+            },
+            "placeholder": {
+              "en": "80"
+            },
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
+        ]
+      },
+      {
+        "id": "disk-temp-above",
+        "title": {
+          "en": "Disk temperature is above"
+        },
+        "titleFormatted": {
+          "en": "Disk [[disk_name]] temperature is above [[threshold]]°C"
+        },
+        "hint": {
+          "en": "Check if a disk's temperature is above a threshold."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          },
+          {
+            "type": "autocomplete",
+            "name": "disk_name",
+            "title": {
+              "en": "Disk"
+            },
+            "placeholder": {
+              "en": "Select disk..."
+            }
+          },
+          {
+            "type": "number",
+            "name": "threshold",
+            "title": {
+              "en": "Threshold"
+            },
+            "placeholder": {
+              "en": "50"
+            },
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
+        ]
+      },
+      {
+        "id": "memory-above",
+        "title": {
+          "en": "Memory usage is above"
+        },
+        "titleFormatted": {
+          "en": "Memory usage is above [[threshold]]%"
+        },
+        "hint": {
+          "en": "This card triggers when the memory usage is above a specified threshold."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          },
+          {
+            "type": "number",
+            "name": "threshold",
+            "title": {
+              "en": "Threshold"
+            },
+            "placeholder": {
+              "en": "80"
+            },
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
+        ]
+      },
+      {
+        "id": "parity-check-running",
+        "title": {
+          "en": "Parity check is running"
+        },
+        "hint": {
+          "en": "Check if a parity check is currently running."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          }
+        ]
+      },
+      {
+        "id": "temp-above",
+        "title": {
+          "en": "Temperature is above"
+        },
+        "titleFormatted": {
+          "en": "CPU temperature is above [[threshold]]°C"
+        },
+        "hint": {
+          "en": "This card triggers when the CPU temperature is above a specified threshold."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          },
+          {
+            "type": "number",
+            "name": "threshold",
+            "title": {
+              "en": "Threshold"
+            },
+            "placeholder": {
+              "en": "70"
+            },
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
+        ]
+      },
+      {
+        "id": "ups-battery-above",
+        "title": {
+          "en": "UPS battery is above"
+        },
+        "titleFormatted": {
+          "en": "UPS battery is above [[threshold]]%"
+        },
+        "hint": {
+          "en": "Check if the UPS battery level is above a threshold."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          },
+          {
+            "type": "number",
+            "name": "threshold",
+            "title": {
+              "en": "Threshold"
+            },
+            "placeholder": {
+              "en": "20"
+            },
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
+        ]
+      },
+      {
+        "id": "ups-connected",
+        "title": {
+          "en": "UPS is connected"
+        },
+        "hint": {
+          "en": "Check if the UPS is connected and online."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          }
+        ]
+      },
+      {
+        "id": "ups-on-battery",
+        "title": {
+          "en": "UPS is on battery"
+        },
+        "hint": {
+          "en": "Check if the UPS is running on battery power."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          }
+        ]
+      },
+      {
+        "id": "vm-running",
+        "title": {
+          "en": "Virtual machine is running"
+        },
+        "titleFormatted": {
+          "en": "VM [[vm_name]] is running"
+        },
+        "hint": {
+          "en": "Check if a specific virtual machine is running."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          },
+          {
+            "type": "autocomplete",
+            "name": "vm_name",
+            "title": {
+              "en": "Virtual Machine"
+            },
+            "placeholder": {
+              "en": "Select VM..."
+            }
+          }
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "pause-parity-check",
+        "title": {
+          "en": "Pause parity check"
+        },
+        "hint": {
+          "en": "Pause a running parity check."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          }
+        ]
+      },
+      {
+        "id": "restart-container",
+        "title": {
+          "en": "Restart Docker container"
+        },
+        "titleFormatted": {
+          "en": "Restart Docker container [[container_name]]"
+        },
+        "hint": {
+          "en": "Restart a Docker container by name."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          },
+          {
+            "type": "autocomplete",
+            "name": "container_name",
+            "title": {
+              "en": "Container"
+            },
+            "placeholder": {
+              "en": "Select container..."
+            }
+          }
+        ]
+      },
+      {
+        "id": "resume-parity-check",
+        "title": {
+          "en": "Resume parity check"
+        },
+        "hint": {
+          "en": "Resume a paused parity check."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          }
+        ]
+      },
+      {
+        "id": "spin-down-disk",
+        "title": {
+          "en": "Spin down disk"
+        },
+        "titleFormatted": {
+          "en": "Spin down disk [[disk_name]]"
+        },
+        "hint": {
+          "en": "Spin down a disk to standby."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          },
+          {
+            "type": "autocomplete",
+            "name": "disk_name",
+            "title": {
+              "en": "Disk"
+            },
+            "placeholder": {
+              "en": "Select disk..."
+            }
+          }
+        ]
+      },
+      {
+        "id": "spin-up-disk",
+        "title": {
+          "en": "Spin up disk"
+        },
+        "titleFormatted": {
+          "en": "Spin up disk [[disk_name]]"
+        },
+        "hint": {
+          "en": "Spin up a disk from standby."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          },
+          {
+            "type": "autocomplete",
+            "name": "disk_name",
+            "title": {
+              "en": "Disk"
+            },
+            "placeholder": {
+              "en": "Select disk..."
+            }
+          }
+        ]
+      },
+      {
+        "id": "start-array",
+        "title": {
+          "en": "Start array"
+        },
+        "hint": {
+          "en": "Start the Unraid storage array. Use with caution."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          }
+        ]
+      },
+      {
+        "id": "start-container",
+        "title": {
+          "en": "Start Docker container"
+        },
+        "titleFormatted": {
+          "en": "Start Docker container [[container_name]]"
+        },
+        "hint": {
+          "en": "Start a Docker container by name."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          },
+          {
+            "type": "autocomplete",
+            "name": "container_name",
+            "title": {
+              "en": "Container"
+            },
+            "placeholder": {
+              "en": "Select container..."
+            }
+          }
+        ]
+      },
+      {
+        "id": "start-parity-check",
+        "title": {
+          "en": "Start parity check"
+        },
+        "hint": {
+          "en": "Start a parity check operation (read-only, no corrections)."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          }
+        ]
+      },
+      {
+        "id": "start-parity-check-correct",
+        "title": {
+          "en": "Start parity check (with corrections)"
+        },
+        "hint": {
+          "en": "Start a parity check operation that will correct errors found."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          }
+        ]
+      },
+      {
+        "id": "start-vm",
+        "title": {
+          "en": "Start virtual machine"
+        },
+        "titleFormatted": {
+          "en": "Start virtual machine [[vm_name]]"
+        },
+        "hint": {
+          "en": "Start a virtual machine by name."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          },
+          {
+            "type": "autocomplete",
+            "name": "vm_name",
+            "title": {
+              "en": "Virtual Machine"
+            },
+            "placeholder": {
+              "en": "Select VM..."
+            }
+          }
+        ]
+      },
+      {
+        "id": "stop-array",
+        "title": {
+          "en": "Stop array"
+        },
+        "hint": {
+          "en": "Stop the Unraid storage array. WARNING: This will affect all containers and VMs using array storage."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          }
+        ]
+      },
+      {
+        "id": "stop-container",
+        "title": {
+          "en": "Stop Docker container"
+        },
+        "titleFormatted": {
+          "en": "Stop Docker container [[container_name]]"
+        },
+        "hint": {
+          "en": "Stop a Docker container by name."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          },
+          {
+            "type": "autocomplete",
+            "name": "container_name",
+            "title": {
+              "en": "Container"
+            },
+            "placeholder": {
+              "en": "Select container..."
+            }
+          }
+        ]
+      },
+      {
+        "id": "stop-parity-check",
+        "title": {
+          "en": "Stop parity check"
+        },
+        "hint": {
+          "en": "Stop/cancel a running parity check."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          }
+        ]
+      },
+      {
+        "id": "stop-vm",
+        "title": {
+          "en": "Stop virtual machine"
+        },
+        "titleFormatted": {
+          "en": "Stop virtual machine [[vm_name]]"
+        },
+        "hint": {
+          "en": "Stop a virtual machine by name."
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=unraid-server"
+          },
+          {
+            "type": "autocomplete",
+            "name": "vm_name",
+            "title": {
+              "en": "Virtual Machine"
+            },
+            "placeholder": {
+              "en": "Select VM..."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "drivers": [
+    {
+      "name": {
+        "en": "Unraid Server"
+      },
+      "class": "other",
+      "capabilities": [
+        "cpu_usage",
+        "cpu_temperature",
+        "cpu_power",
+        "memory_usage",
+        "uptime",
+        "notifications_count",
+        "array_status",
+        "array_usage",
+        "storage_used",
+        "storage_free",
+        "parity_status",
+        "disk_health",
+        "disk_temperature",
+        "containers_running",
+        "containers_total",
+        "vms_running",
+        "vms_total",
+        "ups_connected",
+        "ups_status",
+        "ups_battery",
+        "ups_load",
+        "ups_power",
+        "ups_runtime"
+      ],
+      "energy": {
+        "approximation": {
+          "usageConstant": 0
+        }
+      },
+      "images": {
+        "small": "/drivers/unraid-server/assets/images/small.png",
+        "large": "/drivers/unraid-server/assets/images/large.png",
+        "xlarge": "/drivers/unraid-server/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "host",
+          "template": "host",
+          "navigation": {
+            "next": "api_key"
+          }
+        },
+        {
+          "id": "api_key",
+          "template": "api_key",
+          "navigation": {
+            "prev": "host",
+            "next": "test_connection"
+          }
+        },
+        {
+          "id": "test_connection",
+          "template": "test_connection",
+          "navigation": {
+            "prev": "api_key"
+          }
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "prev": "test_connection"
+          }
+        }
+      ],
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "Connection Settings"
+          },
+          "children": [
+            {
+              "id": "host",
+              "type": "text",
+              "label": {
+                "en": "Server Address"
+              },
+              "hint": {
+                "en": "IP address or hostname of your Unraid server"
+              }
+            },
+            {
+              "id": "port",
+              "type": "number",
+              "label": {
+                "en": "Port"
+              },
+              "hint": {
+                "en": "GraphQL API port (default: 443 for HTTPS)"
+              },
+              "value": 443,
+              "min": 1,
+              "max": 65535
+            },
+            {
+              "id": "useHttps",
+              "type": "checkbox",
+              "label": {
+                "en": "Use HTTPS"
+              },
+              "hint": {
+                "en": "Connect securely via HTTPS"
+              },
+              "value": true
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Polling Settings"
+          },
+          "children": [
+            {
+              "id": "systemPollInterval",
+              "type": "number",
+              "label": {
+                "en": "System Poll Interval (seconds)"
+              },
+              "hint": {
+                "en": "How often to poll CPU, memory, and temperature"
+              },
+              "value": 30,
+              "min": 10,
+              "max": 300
+            },
+            {
+              "id": "storagePollInterval",
+              "type": "number",
+              "label": {
+                "en": "Storage Poll Interval (seconds)"
+              },
+              "hint": {
+                "en": "How often to poll storage and array information"
+              },
+              "value": 300,
+              "min": 60,
+              "max": 3600
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "UPS Settings"
+          },
+          "children": [
+            {
+              "id": "upsVaRating",
+              "type": "number",
+              "label": {
+                "en": "UPS VA Rating"
+              },
+              "hint": {
+                "en": "The VA (Volt-Ampere) rating of your UPS. Used to calculate power consumption from load percentage. Check your UPS manual for this value."
+              },
+              "value": 0,
+              "min": 0,
+              "max": 100000
+            }
+          ]
+        }
+      ],
+      "id": "unraid-server"
+    }
+  ],
+  "capabilities": {
+    "array_status": {
+      "type": "enum",
+      "title": {
+        "en": "Array Status"
+      },
+      "desc": {
+        "en": "Current storage array status"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "values": [
+        {
+          "id": "started",
+          "title": {
+            "en": "Started"
+          }
+        },
+        {
+          "id": "stopped",
+          "title": {
+            "en": "Stopped"
+          }
+        },
+        {
+          "id": "starting",
+          "title": {
+            "en": "Starting"
+          }
+        },
+        {
+          "id": "stopping",
+          "title": {
+            "en": "Stopping"
+          }
+        },
+        {
+          "id": "error",
+          "title": {
+            "en": "Error"
+          }
+        }
+      ],
+      "icon": "/assets/icons/array-status.svg"
+    },
+    "array_usage": {
+      "type": "number",
+      "title": {
+        "en": "Array Usage"
+      },
+      "units": {
+        "en": "%"
+      },
+      "desc": {
+        "en": "Current storage array usage percentage"
+      },
+      "insights": true,
+      "getable": true,
+      "setable": false,
+      "min": 0,
+      "max": 100,
+      "step": 0.1,
+      "icon": "/assets/icons/storage.svg"
+    },
+    "containers_running": {
+      "type": "number",
+      "title": {
+        "en": "Running Containers"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/icons/docker.svg",
+      "insights": true
+    },
+    "containers_total": {
+      "type": "number",
+      "title": {
+        "en": "Total Containers"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/icons/docker.svg",
+      "insights": true
+    },
+    "cpu_power": {
+      "type": "number",
+      "title": {
+        "en": "CPU Power"
+      },
+      "units": {
+        "en": "W"
+      },
+      "desc": {
+        "en": "CPU power consumption in watts (requires API v4.26+)"
+      },
+      "insights": true,
+      "getable": true,
+      "setable": false,
+      "min": 0,
+      "step": 0.1,
+      "icon": "/assets/icons/power.svg"
+    },
+    "cpu_temperature": {
+      "type": "number",
+      "title": {
+        "en": "CPU Temperature"
+      },
+      "units": {
+        "en": "°C"
+      },
+      "desc": {
+        "en": "Current CPU temperature"
+      },
+      "insights": true,
+      "getable": true,
+      "setable": false,
+      "min": 0,
+      "max": 150,
+      "step": 1,
+      "icon": "/assets/icons/temperature.svg"
+    },
+    "cpu_usage": {
+      "type": "number",
+      "title": {
+        "en": "CPU Usage"
+      },
+      "units": {
+        "en": "%"
+      },
+      "desc": {
+        "en": "Current CPU usage percentage"
+      },
+      "insights": true,
+      "getable": true,
+      "setable": false,
+      "min": 0,
+      "max": 100,
+      "step": 0.1,
+      "icon": "/assets/icons/cpu.svg"
+    },
+    "disk_health": {
+      "type": "enum",
+      "title": {
+        "en": "Disk Health"
+      },
+      "desc": {
+        "en": "Overall disk health status based on SMART data"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "values": [
+        {
+          "id": "healthy",
+          "title": {
+            "en": "Healthy"
+          }
+        },
+        {
+          "id": "warning",
+          "title": {
+            "en": "Warning"
+          }
+        },
+        {
+          "id": "critical",
+          "title": {
+            "en": "Critical"
+          }
+        },
+        {
+          "id": "unknown",
+          "title": {
+            "en": "Unknown"
+          }
+        }
+      ],
+      "icon": "/assets/icons/disk-health.svg"
+    },
+    "disk_temperature": {
+      "type": "number",
+      "title": {
+        "en": "Disk Temperature"
+      },
+      "units": {
+        "en": "°C"
+      },
+      "desc": {
+        "en": "Current disk temperature"
+      },
+      "insights": true,
+      "getable": true,
+      "setable": false,
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "icon": "/assets/icons/disk-temp.svg"
+    },
+    "memory_usage": {
+      "type": "number",
+      "title": {
+        "en": "Memory Usage"
+      },
+      "units": {
+        "en": "%"
+      },
+      "desc": {
+        "en": "Current memory usage percentage"
+      },
+      "insights": true,
+      "getable": true,
+      "setable": false,
+      "min": 0,
+      "max": 100,
+      "step": 0.1,
+      "icon": "/assets/icons/memory.svg"
+    },
+    "notifications_count": {
+      "type": "number",
+      "title": {
+        "en": "Active Notifications"
+      },
+      "desc": {
+        "en": "Number of unread notifications"
+      },
+      "insights": true,
+      "getable": true,
+      "setable": false,
+      "min": 0,
+      "step": 1,
+      "icon": "/assets/icons/notification.svg"
+    },
+    "parity_status": {
+      "type": "enum",
+      "title": {
+        "en": "Parity Status"
+      },
+      "desc": {
+        "en": "Current parity check status"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "values": [
+        {
+          "id": "valid",
+          "title": {
+            "en": "Valid"
+          }
+        },
+        {
+          "id": "checking",
+          "title": {
+            "en": "Checking"
+          }
+        },
+        {
+          "id": "invalid",
+          "title": {
+            "en": "Invalid"
+          }
+        },
+        {
+          "id": "disabled",
+          "title": {
+            "en": "Disabled"
+          }
+        }
+      ],
+      "icon": "/assets/icons/parity.svg"
+    },
+    "storage_free": {
+      "type": "number",
+      "title": {
+        "en": "Storage Free"
+      },
+      "units": {
+        "en": "TB"
+      },
+      "desc": {
+        "en": "Free storage space in terabytes"
+      },
+      "insights": true,
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "min": 0,
+      "decimals": 1,
+      "icon": "/assets/icons/storage-free.svg"
+    },
+    "storage_used": {
+      "type": "number",
+      "title": {
+        "en": "Storage Used"
+      },
+      "units": {
+        "en": "TB"
+      },
+      "desc": {
+        "en": "Used storage space in terabytes"
+      },
+      "insights": true,
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "min": 0,
+      "decimals": 1,
+      "icon": "/assets/icons/storage-used.svg"
+    },
+    "ups_battery": {
+      "type": "number",
+      "title": {
+        "en": "UPS Battery"
+      },
+      "units": {
+        "en": "%"
+      },
+      "desc": {
+        "en": "UPS battery charge level"
+      },
+      "insights": true,
+      "getable": true,
+      "setable": false,
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "icon": "/assets/icons/battery.svg"
+    },
+    "ups_connected": {
+      "type": "boolean",
+      "title": {
+        "en": "UPS Connected"
+      },
+      "desc": {
+        "en": "Whether the UPS is connected and online"
+      },
+      "getable": true,
+      "setable": false,
+      "icon": "/assets/icons/ups.svg"
+    },
+    "ups_load": {
+      "type": "number",
+      "title": {
+        "en": "UPS Load"
+      },
+      "units": {
+        "en": "%"
+      },
+      "desc": {
+        "en": "UPS load percentage"
+      },
+      "insights": true,
+      "getable": true,
+      "setable": false,
+      "min": 0,
+      "max": 100,
+      "step": 0.1,
+      "icon": "/assets/icons/gauge.svg"
+    },
+    "ups_power": {
+      "type": "number",
+      "title": {
+        "en": "UPS Power"
+      },
+      "units": {
+        "en": "W"
+      },
+      "desc": {
+        "en": "UPS power output in watts"
+      },
+      "insights": true,
+      "getable": true,
+      "setable": false,
+      "min": 0,
+      "step": 0.1,
+      "icon": "/assets/icons/power.svg"
+    },
+    "ups_runtime": {
+      "type": "number",
+      "title": {
+        "en": "UPS Runtime"
+      },
+      "units": {
+        "en": "min"
+      },
+      "desc": {
+        "en": "Estimated UPS runtime remaining in minutes"
+      },
+      "insights": true,
+      "getable": true,
+      "setable": false,
+      "min": 0,
+      "step": 1,
+      "icon": "/assets/icons/timer.svg"
+    },
+    "ups_status": {
+      "type": "string",
+      "title": {
+        "en": "UPS Status"
+      },
+      "desc": {
+        "en": "Current UPS status (Online, On Battery, etc.)"
+      },
+      "getable": true,
+      "setable": false,
+      "icon": "/assets/icons/ups.svg"
+    },
+    "uptime": {
+      "type": "string",
+      "title": {
+        "en": "Uptime"
+      },
+      "desc": {
+        "en": "System uptime since last boot"
+      },
+      "getable": true,
+      "setable": false,
+      "icon": "/assets/icons/uptime.svg"
+    },
+    "vms_running": {
+      "type": "number",
+      "title": {
+        "en": "Running VMs"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/icons/vm.svg",
+      "insights": true
+    },
+    "vms_total": {
+      "type": "number",
+      "title": {
+        "en": "Total VMs"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/icons/vm.svg",
+      "insights": true
+    }
+  }
 }

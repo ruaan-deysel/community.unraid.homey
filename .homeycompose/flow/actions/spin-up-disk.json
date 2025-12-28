@@ -1,0 +1,29 @@
+{
+  "id": "spin-up-disk",
+  "title": {
+    "en": "Spin up disk"
+  },
+  "titleFormatted": {
+    "en": "Spin up disk [[disk_name]]"
+  },
+  "hint": {
+    "en": "Spin up a disk from standby."
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=unraid-server"
+    },
+    {
+      "type": "autocomplete",
+      "name": "disk_name",
+      "title": {
+        "en": "Disk"
+      },
+      "placeholder": {
+        "en": "Select disk..."
+      }
+    }
+  ]
+}

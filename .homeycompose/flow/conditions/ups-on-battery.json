@@ -1,0 +1,16 @@
+{
+  "id": "ups-on-battery",
+  "title": {
+    "en": "UPS is on battery"
+  },
+  "hint": {
+    "en": "Check if the UPS is running on battery power."
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=unraid-server"
+    }
+  ]
+}

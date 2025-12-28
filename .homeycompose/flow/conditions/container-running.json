@@ -1,0 +1,29 @@
+{
+  "id": "container-running",
+  "title": {
+    "en": "Docker container is running"
+  },
+  "titleFormatted": {
+    "en": "Container [[container_name]] is running"
+  },
+  "hint": {
+    "en": "Check if a specific Docker container is running."
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=unraid-server"
+    },
+    {
+      "type": "autocomplete",
+      "name": "container_name",
+      "title": {
+        "en": "Container"
+      },
+      "placeholder": {
+        "en": "Select container..."
+      }
+    }
+  ]
+}

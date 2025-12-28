@@ -1,0 +1,16 @@
+{
+  "id": "start-parity-check-correct",
+  "title": {
+    "en": "Start parity check (with corrections)"
+  },
+  "hint": {
+    "en": "Start a parity check operation that will correct errors found."
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=unraid-server"
+    }
+  ]
+}

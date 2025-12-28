@@ -1,0 +1,39 @@
+{
+  "type": "enum",
+  "title": {
+    "en": "Disk Health"
+  },
+  "desc": {
+    "en": "Overall disk health status based on SMART data"
+  },
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor",
+  "values": [
+    {
+      "id": "healthy",
+      "title": {
+        "en": "Healthy"
+      }
+    },
+    {
+      "id": "warning",
+      "title": {
+        "en": "Warning"
+      }
+    },
+    {
+      "id": "critical",
+      "title": {
+        "en": "Critical"
+      }
+    },
+    {
+      "id": "unknown",
+      "title": {
+        "en": "Unknown"
+      }
+    }
+  ],
+  "icon": "/assets/icons/disk-health.svg"
+}

@@ -1,0 +1,34 @@
+{
+  "id": "vm-stopped",
+  "title": {
+    "en": "Virtual machine stopped"
+  },
+  "hint": {
+    "en": "Triggered when a virtual machine stops running."
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=unraid-server"
+    }
+  ],
+  "tokens": [
+    {
+      "name": "vm_name",
+      "type": "string",
+      "title": {
+        "en": "VM Name"
+      },
+      "example": "Windows10"
+    },
+    {
+      "name": "vm_id",
+      "type": "string",
+      "title": {
+        "en": "VM ID"
+      },
+      "example": "abc123"
+    }
+  ]
+}

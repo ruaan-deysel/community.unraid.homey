@@ -1,0 +1,16 @@
+{
+  "id": "resume-parity-check",
+  "title": {
+    "en": "Resume parity check"
+  },
+  "hint": {
+    "en": "Resume a paused parity check."
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=unraid-server"
+    }
+  ]
+}

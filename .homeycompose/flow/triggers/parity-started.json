@@ -1,0 +1,26 @@
+{
+  "id": "parity-started",
+  "title": {
+    "en": "Parity check started"
+  },
+  "hint": {
+    "en": "Triggered when a parity check begins on the server."
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=unraid-server"
+    }
+  ],
+  "tokens": [
+    {
+      "name": "progress",
+      "type": "number",
+      "title": {
+        "en": "Progress"
+      },
+      "example": 0
+    }
+  ]
+}

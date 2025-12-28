@@ -1,0 +1,34 @@
+{
+  "id": "ups-on-battery",
+  "title": {
+    "en": "UPS switched to battery"
+  },
+  "hint": {
+    "en": "Triggered when the UPS switches from mains power to battery power."
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=unraid-server"
+    }
+  ],
+  "tokens": [
+    {
+      "name": "battery_level",
+      "type": "number",
+      "title": {
+        "en": "Battery Level"
+      },
+      "example": 100
+    },
+    {
+      "name": "runtime",
+      "type": "number",
+      "title": {
+        "en": "Runtime (min)"
+      },
+      "example": 30
+    }
+  ]
+}

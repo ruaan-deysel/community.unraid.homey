@@ -1,0 +1,16 @@
+{
+  "id": "ups-connected",
+  "title": {
+    "en": "UPS is connected"
+  },
+  "hint": {
+    "en": "Check if the UPS is connected and online."
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=unraid-server"
+    }
+  ]
+}

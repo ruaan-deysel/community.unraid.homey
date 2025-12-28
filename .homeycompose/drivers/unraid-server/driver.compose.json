@@ -1,0 +1,171 @@
+{
+  "name": {
+    "en": "Unraid Server"
+  },
+  "class": "other",
+  "capabilities": [
+    "cpu_usage",
+    "cpu_temperature",
+    "cpu_power",
+    "memory_usage",
+    "uptime",
+    "notifications_count",
+    "array_status",
+    "array_usage",
+    "storage_used",
+    "storage_free",
+    "parity_status",
+    "disk_health",
+    "disk_temperature",
+    "containers_running",
+    "containers_total",
+    "vms_running",
+    "vms_total",
+    "ups_connected",
+    "ups_status",
+    "ups_battery",
+    "ups_load",
+    "ups_power",
+    "ups_runtime"
+  ],
+  "energy": {
+    "approximation": {
+      "usageConstant": 0
+    }
+  },
+  "images": {
+    "small": "/drivers/unraid-server/assets/images/small.png",
+    "large": "/drivers/unraid-server/assets/images/large.png",
+    "xlarge": "/drivers/unraid-server/assets/images/xlarge.png"
+  },
+  "pair": [
+    {
+      "id": "host",
+      "template": "host",
+      "navigation": {
+        "next": "api_key"
+      }
+    },
+    {
+      "id": "api_key",
+      "template": "api_key",
+      "navigation": {
+        "prev": "host",
+        "next": "test_connection"
+      }
+    },
+    {
+      "id": "test_connection",
+      "template": "test_connection",
+      "navigation": {
+        "prev": "api_key"
+      }
+    },
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": {
+        "prev": "test_connection"
+      }
+    }
+  ],
+  "settings": [
+    {
+      "type": "group",
+      "label": {
+        "en": "Connection Settings"
+      },
+      "children": [
+        {
+          "id": "host",
+          "type": "text",
+          "label": {
+            "en": "Server Address"
+          },
+          "hint": {
+            "en": "IP address or hostname of your Unraid server"
+          }
+        },
+        {
+          "id": "port",
+          "type": "number",
+          "label": {
+            "en": "Port"
+          },
+          "hint": {
+            "en": "GraphQL API port (default: 443 for HTTPS)"
+          },
+          "value": 443,
+          "min": 1,
+          "max": 65535
+        },
+        {
+          "id": "useHttps",
+          "type": "checkbox",
+          "label": {
+            "en": "Use HTTPS"
+          },
+          "hint": {
+            "en": "Connect securely via HTTPS"
+          },
+          "value": true
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "label": {
+        "en": "Polling Settings"
+      },
+      "children": [
+        {
+          "id": "systemPollInterval",
+          "type": "number",
+          "label": {
+            "en": "System Poll Interval (seconds)"
+          },
+          "hint": {
+            "en": "How often to poll CPU, memory, and temperature"
+          },
+          "value": 30,
+          "min": 10,
+          "max": 300
+        },
+        {
+          "id": "storagePollInterval",
+          "type": "number",
+          "label": {
+            "en": "Storage Poll Interval (seconds)"
+          },
+          "hint": {
+            "en": "How often to poll storage and array information"
+          },
+          "value": 300,
+          "min": 60,
+          "max": 3600
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "label": {
+        "en": "UPS Settings"
+      },
+      "children": [
+        {
+          "id": "upsVaRating",
+          "type": "number",
+          "label": {
+            "en": "UPS VA Rating"
+          },
+          "hint": {
+            "en": "The VA (Volt-Ampere) rating of your UPS. Used to calculate power consumption from load percentage. Check your UPS manual for this value."
+          },
+          "value": 0,
+          "min": 0,
+          "max": 100000
+        }
+      ]
+    }
+  ]
+}

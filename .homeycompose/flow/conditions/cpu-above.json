@@ -1,0 +1,32 @@
+{
+  "id": "cpu-above",
+  "title": {
+    "en": "CPU usage is above"
+  },
+  "titleFormatted": {
+    "en": "CPU usage is above [[threshold]]%"
+  },
+  "hint": {
+    "en": "This card triggers when the CPU usage is above a specified threshold."
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=unraid-server"
+    },
+    {
+      "type": "number",
+      "name": "threshold",
+      "title": {
+        "en": "Threshold"
+      },
+      "placeholder": {
+        "en": "80"
+      },
+      "min": 0,
+      "max": 100,
+      "step": 1
+    }
+  ]
+}

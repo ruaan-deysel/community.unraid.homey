@@ -2,6 +2,13 @@
   "extends": "@tsconfig/node16/tsconfig.json",
   "compilerOptions": {
     "allowJs": true,
-    "outDir": ".homeybuild/"
-  }
+    "outDir": ".homeybuild/",
+    "baseUrl": ".",
+    "esModuleInterop": true,
+    "paths": {
+      "@lib/*": ["lib/*"]
+    }
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules", ".homeybuild", "coverage", "tests", "vitest.config.ts"]
 }

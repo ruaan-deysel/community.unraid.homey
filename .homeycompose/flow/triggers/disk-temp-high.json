@@ -1,0 +1,34 @@
+{
+  "id": "disk-temp-high",
+  "title": {
+    "en": "Disk temperature high"
+  },
+  "hint": {
+    "en": "Triggered when a disk temperature exceeds the warning threshold."
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=unraid-server"
+    }
+  ],
+  "tokens": [
+    {
+      "name": "disk_name",
+      "type": "string",
+      "title": {
+        "en": "Disk Name"
+      },
+      "example": "disk1"
+    },
+    {
+      "name": "temperature",
+      "type": "number",
+      "title": {
+        "en": "Temperature (°C)"
+      },
+      "example": 55
+    }
+  ]
+}

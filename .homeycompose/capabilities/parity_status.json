@@ -1,0 +1,39 @@
+{
+  "type": "enum",
+  "title": {
+    "en": "Parity Status"
+  },
+  "desc": {
+    "en": "Current parity check status"
+  },
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor",
+  "values": [
+    {
+      "id": "valid",
+      "title": {
+        "en": "Valid"
+      }
+    },
+    {
+      "id": "checking",
+      "title": {
+        "en": "Checking"
+      }
+    },
+    {
+      "id": "invalid",
+      "title": {
+        "en": "Invalid"
+      }
+    },
+    {
+      "id": "disabled",
+      "title": {
+        "en": "Disabled"
+      }
+    }
+  ],
+  "icon": "/assets/icons/parity.svg"
+}

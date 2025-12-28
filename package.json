@@ -3,16 +3,24 @@
   "version": "1.0.0",
   "scripts": {
     "build": "tsc",
-    "lint": "eslint --ext .js,.ts --ignore-path .gitignore ."
+    "lint": "eslint --ext .js,.ts --ignore-path .gitignore .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "devDependencies": {
     "@tsconfig/node16": "^16.1.8",
     "@types/homey": "npm:homey-apps-sdk-v3-types@^0.3.12",
     "@types/node": "^25.0.3",
+    "@vitest/coverage-v8": "^4.0.16",
     "eslint": "^7.32.0",
     "eslint-config-athom": "^3.1.5",
     "eslint-config-prettier": "^10.1.8",
     "prettier": "^3.7.4",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.16"
+  },
+  "dependencies": {
+    "zod": "^4.2.1"
   }
 }

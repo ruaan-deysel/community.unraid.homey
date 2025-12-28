@@ -1,0 +1,19 @@
+{
+  "type": "number",
+  "title": {
+    "en": "CPU Temperature"
+  },
+  "units": {
+    "en": "°C"
+  },
+  "desc": {
+    "en": "Current CPU temperature"
+  },
+  "insights": true,
+  "getable": true,
+  "setable": false,
+  "min": 0,
+  "max": 150,
+  "step": 1,
+  "icon": "/assets/icons/temperature.svg"
+}

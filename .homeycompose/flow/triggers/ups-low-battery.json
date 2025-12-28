@@ -1,0 +1,34 @@
+{
+  "id": "ups-low-battery",
+  "title": {
+    "en": "UPS battery low"
+  },
+  "hint": {
+    "en": "Triggered when the UPS battery level falls below 20%."
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=unraid-server"
+    }
+  ],
+  "tokens": [
+    {
+      "name": "battery_level",
+      "type": "number",
+      "title": {
+        "en": "Battery Level"
+      },
+      "example": 15
+    },
+    {
+      "name": "runtime",
+      "type": "number",
+      "title": {
+        "en": "Runtime (min)"
+      },
+      "example": 5
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "type": "number",
+  "title": {
+    "en": "Storage Free"
+  },
+  "units": {
+    "en": "TB"
+  },
+  "desc": {
+    "en": "Free storage space in terabytes"
+  },
+  "insights": true,
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor",
+  "min": 0,
+  "decimals": 1,
+  "icon": "/assets/icons/storage-free.svg"
+}

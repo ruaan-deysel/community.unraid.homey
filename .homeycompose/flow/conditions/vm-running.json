@@ -1,0 +1,29 @@
+{
+  "id": "vm-running",
+  "title": {
+    "en": "Virtual machine is running"
+  },
+  "titleFormatted": {
+    "en": "VM [[vm_name]] is running"
+  },
+  "hint": {
+    "en": "Check if a specific virtual machine is running."
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=unraid-server"
+    },
+    {
+      "type": "autocomplete",
+      "name": "vm_name",
+      "title": {
+        "en": "Virtual Machine"
+      },
+      "placeholder": {
+        "en": "Select VM..."
+      }
+    }
+  ]
+}
