@@ -1,0 +1,82 @@
+name: ❓ Question / Support
+description: Ask a question or get help with setup
+labels: ["question", "support"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Need help with the Unraid app? We're happy to assist!
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Preflight Checklist
+      options:
+        - label: I have read the README and documentation
+          required: true
+        - label: I have searched existing issues for similar questions
+          required: true
+
+  - type: dropdown
+    id: question-type
+    attributes:
+      label: Question Category
+      description: What is your question about?
+      options:
+        - Installation / Setup
+        - Pairing / Connection
+        - Flow Cards (Triggers/Conditions/Actions)
+        - Capabilities / Sensors
+        - Docker Container Monitoring
+        - VM Monitoring
+        - UPS Monitoring
+        - API / API Keys
+        - Performance
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your Question
+      description: Please describe your question in detail
+      placeholder: How do I...
+    validations:
+      required: true
+
+  - type: textarea
+    id: tried
+    attributes:
+      label: What I've Tried
+      description: What have you already tried to solve this?
+    validations:
+      required: false
+
+  - type: input
+    id: app-version
+    attributes:
+      label: App Version
+      description: What version of the Unraid app are you using?
+      placeholder: "1.0.0"
+    validations:
+      required: false
+
+  - type: input
+    id: unraid-version
+    attributes:
+      label: Unraid Version
+      description: What version of Unraid is your server running?
+      placeholder: "7.0.0"
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Add any other context, screenshots, or configuration details
+    validations:
+      required: false

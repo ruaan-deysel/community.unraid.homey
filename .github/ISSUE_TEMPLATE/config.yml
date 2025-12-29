@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Homey Community Forum
+    url: https://community.homey.app/
+    about: Ask questions and discuss with other Homey users
+  - name: 📖 Unraid Documentation
+    url: https://docs.unraid.net/
+    about: Official Unraid documentation
+  - name: 🏠 Unraid Community
+    url: https://forums.unraid.net/
+    about: Unraid community forums

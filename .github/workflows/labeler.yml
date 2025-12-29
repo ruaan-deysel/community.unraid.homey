@@ -1,0 +1,69 @@
+name: Issue & PR Labeler
+
+on:
+  issues:
+    types: [opened, edited]
+  pull_request:
+    types: [opened, edited]
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  label-issues:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'issues'
+    steps:
+      - name: Label based on title/body content
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const title = issue.title.toLowerCase();
+            const body = (issue.body || '').toLowerCase();
+            const labelsToAdd = [];
+            
+            // Component labels based on content
+            if (title.includes('pair') || body.includes('pairing') || body.includes('connect')) {
+              labelsToAdd.push('component: pairing');
+            }
+            if (title.includes('docker') || body.includes('container')) {
+              labelsToAdd.push('component: docker');
+            }
+            if (title.includes('vm') || body.includes('virtual machine')) {
+              labelsToAdd.push('component: vms');
+            }
+            if (title.includes('ups') || body.includes('battery') || body.includes('power')) {
+              labelsToAdd.push('component: ups');
+            }
+            if (title.includes('storage') || body.includes('array') || body.includes('disk') || body.includes('parity')) {
+              labelsToAdd.push('component: storage');
+            }
+            if (title.includes('flow') || body.includes('trigger') || body.includes('action') || body.includes('condition')) {
+              labelsToAdd.push('component: flows');
+            }
+            if (title.includes('api') || body.includes('graphql') || body.includes('api key')) {
+              labelsToAdd.push('component: api');
+            }
+            if (title.includes('poll') || body.includes('polling') || body.includes('update interval')) {
+              labelsToAdd.push('component: polling');
+            }
+            
+            // Add labels if any were identified
+            if (labelsToAdd.length > 0) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                labels: labelsToAdd
+              });
+            }
+
+  label-prs:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/labeler@v5
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"

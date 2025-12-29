@@ -1,0 +1,36 @@
+# Configuration for PR Labeler action
+# Labels PRs based on changed files
+
+"component: api":
+  - changed-files:
+    - any-glob-to-any-file: 'lib/api/**/*'
+
+"component: flows":
+  - changed-files:
+    - any-glob-to-any-file: '.homeycompose/flow/**/*'
+
+"component: pairing":
+  - changed-files:
+    - any-glob-to-any-file: 'drivers/*/pair/**/*'
+    - any-glob-to-any-file: 'drivers/*/driver.ts'
+
+documentation:
+  - changed-files:
+    - any-glob-to-any-file: '**/*.md'
+    - any-glob-to-any-file: 'docs/**/*'
+
+"component: storage":
+  - changed-files:
+    - any-glob-to-any-file: 'lib/schemas/storage.ts'
+
+"component: docker":
+  - changed-files:
+    - any-glob-to-any-file: 'lib/schemas/docker.ts'
+
+"component: vms":
+  - changed-files:
+    - any-glob-to-any-file: 'lib/schemas/vm.ts'
+
+tests:
+  - changed-files:
+    - any-glob-to-any-file: 'tests/**/*'

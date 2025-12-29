@@ -1,0 +1,117 @@
+name: 🐛 Bug Report
+description: Report a bug or unexpected behavior
+labels: ["bug", "triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please fill out the information below to help us investigate.
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Preflight Checklist
+      options:
+        - label: I have searched the existing issues and this bug has not been reported
+          required: true
+        - label: I am using the latest version of the Unraid app
+          required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of the bug
+      placeholder: Describe what happened...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+      placeholder: I expected...
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. See error
+    validations:
+      required: true
+
+  - type: input
+    id: app-version
+    attributes:
+      label: App Version
+      description: What version of the Unraid app are you using?
+      placeholder: "1.0.0"
+    validations:
+      required: true
+
+  - type: input
+    id: unraid-version
+    attributes:
+      label: Unraid Version
+      description: What version of Unraid is your server running?
+      placeholder: "7.0.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: homey-model
+    attributes:
+      label: Homey Model
+      description: Which Homey device are you using?
+      options:
+        - Homey Pro (Early 2023)
+        - Homey Pro (Early 2019)
+        - Homey (Early 2016)
+        - Homey Bridge
+        - Homey Cloud
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: homey-version
+    attributes:
+      label: Homey Firmware Version
+      description: What Homey firmware version are you running?
+      placeholder: "10.0.0"
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Log Output
+      description: Please copy and paste any relevant log output (from Homey Developer Tools)
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: If applicable, add screenshots to help explain your problem
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Add any other context about the problem here
+    validations:
+      required: false

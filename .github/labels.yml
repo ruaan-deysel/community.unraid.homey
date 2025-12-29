@@ -1,0 +1,104 @@
+# Labels for the Unraid Homey App
+# Use with GitHub Actions label sync or manually create
+
+# Issue Types
+- name: bug
+  color: "d73a4a"
+  description: "Something isn't working"
+
+- name: enhancement
+  color: "a2eeef"
+  description: "New feature or request"
+
+- name: question
+  color: "d876e3"
+  description: "Further information is requested"
+
+- name: support
+  color: "7057ff"
+  description: "Help or support request"
+
+# Status
+- name: triage
+  color: "fbca04"
+  description: "Needs investigation"
+
+- name: confirmed
+  color: "0e8a16"
+  description: "Bug has been confirmed"
+
+- name: wontfix
+  color: "ffffff"
+  description: "This will not be worked on"
+
+- name: duplicate
+  color: "cfd3d7"
+  description: "This issue or pull request already exists"
+
+- name: invalid
+  color: "e4e669"
+  description: "This doesn't seem right"
+
+# Priority
+- name: "priority: critical"
+  color: "b60205"
+  description: "Critical priority - app breaking"
+
+- name: "priority: high"
+  color: "d93f0b"
+  description: "High priority"
+
+- name: "priority: medium"
+  color: "fbca04"
+  description: "Medium priority"
+
+- name: "priority: low"
+  color: "0e8a16"
+  description: "Low priority"
+
+# Component
+- name: "component: pairing"
+  color: "1d76db"
+  description: "Related to device pairing"
+
+- name: "component: polling"
+  color: "1d76db"
+  description: "Related to data polling"
+
+- name: "component: flows"
+  color: "1d76db"
+  description: "Related to flow cards"
+
+- name: "component: docker"
+  color: "1d76db"
+  description: "Related to Docker monitoring"
+
+- name: "component: vms"
+  color: "1d76db"
+  description: "Related to VM monitoring"
+
+- name: "component: ups"
+  color: "1d76db"
+  description: "Related to UPS monitoring"
+
+- name: "component: storage"
+  color: "1d76db"
+  description: "Related to storage/array monitoring"
+
+- name: "component: api"
+  color: "1d76db"
+  description: "Related to Unraid GraphQL API"
+
+# Effort
+- name: "good first issue"
+  color: "7057ff"
+  description: "Good for newcomers"
+
+- name: "help wanted"
+  color: "008672"
+  description: "Extra attention is needed"
+
+# Documentation
+- name: documentation
+  color: "0075ca"
+  description: "Improvements or additions to documentation"
