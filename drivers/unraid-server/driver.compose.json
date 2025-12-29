@@ -3,6 +3,9 @@
     "en": "Unraid Server"
   },
   "class": "other",
+  "platforms": [
+    "local"
+  ],
   "capabilities": [
     "cpu_usage",
     "cpu_temperature",
