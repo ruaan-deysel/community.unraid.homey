@@ -145,6 +145,7 @@ async onInit(): Promise<void> {
    */
   private async ensureCapabilities(): Promise<void> {
     const requiredCapabilities = [
+      'measure_power',
       'cpu_usage',
       'cpu_temperature',
       'cpu_power',
@@ -1001,6 +1002,8 @@ async onInit(): Promise<void> {
       }
       if (power !== null) {
         await this.setCapabilityValue('ups_power', power);
+        // Also set measure_power for Homey Energy integration
+        await this.setCapabilityValue('measure_power', power);
       }
 
       // UPS state change detection
