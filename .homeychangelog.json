@@ -1,14 +1,5 @@
 {
   "1.0.0": {
-    "en": "Initial release of Unraid app for Homey\n\nFeatures:\n• Connect to Unraid servers via GraphQL API\n• Real-time system monitoring (CPU, memory, temperature)\n• Storage array status and health monitoring\n• Docker container discovery and status tracking\n• Virtual machine discovery and status tracking\n• Flow conditions for CPU, memory, and temperature thresholds\n• Flow triggers for parity operations and disk health warnings\n• Multi-server support with unique device naming"
-  },
-  "1.0.1": {
-    "en": "Initial Release"
-  },
-  "1.0.2": {
-    "en": "Initial Release"
-  },
-  "2.0.0": {
-    "en": "Initial Release"
+    "en": "Initial release of Unraid app for Homey\n\nFeatures:\n• Connect to Unraid servers via GraphQL API\n• Real-time system monitoring (CPU, memory, temperature)\n• Storage array status and health monitoring\n• Docker container discovery and status tracking\n• Virtual machine discovery and status tracking\n• UPS monitoring and power management\n• 41 Flow cards (15 triggers, 12 conditions, 14 actions)\n• Multi-server support"
   }
 }
