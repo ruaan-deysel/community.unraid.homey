@@ -1,5 +1,5 @@
 {
-  "id": "com.unraid",
+  "id": "community.unraid.homey",
   "version": "1.0.0",
   "compatibility": ">=12.4.0",
   "sdk": 3,
