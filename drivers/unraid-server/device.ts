@@ -16,7 +16,9 @@ import {
   cancelParityCheck,
   spinUpDisk,
   spinDownDisk,
+  discoverSslMode,
   type UnraidClientConfig,
+  type SslMode,
 } from '../../lib/api/client';
 import { PollManager, POLL_INTERVALS, type HomeyTimers } from '../../lib/utils/poll-manager';
 import { z } from 'zod';
@@ -26,11 +28,12 @@ import { z } from 'zod';
  */
 interface DeviceSettings {
   host: string;
-  port: number;
-  useHttps: boolean;
+  httpPort?: number;
+  httpsPort?: number;
+  useHttps?: boolean;
   systemPollInterval?: number;
   storagePollInterval?: number;
-  upsVaRating?: number;
+  upsNominalPower?: number;
 }
 
 /**
@@ -142,9 +145,16 @@ async onInit(): Promise<void> {
    * This handles upgrades when new capabilities are added
    * Note: Disk usage capabilities (disk1_usage - disk30_usage) are added dynamically
    * based on actual disks present in the array
+   * Docker, VM, and UPS capabilities are added conditionally based on feature availability
    */
   private async ensureCapabilities(): Promise<void> {
-    const requiredCapabilities = [
+    // Get feature availability from store
+    const hasDocker = this.getStoreValue('hasDocker') as boolean | undefined ?? true; // Default true for backward compatibility
+    const hasVMs = this.getStoreValue('hasVMs') as boolean | undefined ?? true;
+    const hasUPS = this.getStoreValue('hasUPS') as boolean | undefined ?? true;
+
+    // Core capabilities that are always present
+    const coreCapabilities = [
       'measure_power',
       'cpu_usage',
       'cpu_temperature',
@@ -159,10 +169,22 @@ async onInit(): Promise<void> {
       'parity_status',
       'disk_health',
       'disk_temperature',
+    ];
+
+    // Docker capabilities
+    const dockerCapabilities = [
       'containers_running',
       'containers_total',
+    ];
+
+    // VM capabilities
+    const vmCapabilities = [
       'vms_running',
       'vms_total',
+    ];
+
+    // UPS capabilities
+    const upsCapabilities = [
       'ups_connected',
       'ups_status',
       'ups_battery',
@@ -177,10 +199,62 @@ async onInit(): Promise<void> {
       await this.removeCapability('disk_usage_summary');
     }
 
-    for (const capability of requiredCapabilities) {
+    // Add core capabilities
+    for (const capability of coreCapabilities) {
       if (!this.hasCapability(capability)) {
-        this.log(`Adding missing capability: ${capability}`);
+        this.log(`Adding core capability: ${capability}`);
         await this.addCapability(capability);
+      }
+    }
+
+    // Handle Docker capabilities conditionally
+    if (hasDocker) {
+      for (const capability of dockerCapabilities) {
+        if (!this.hasCapability(capability)) {
+          this.log(`Adding Docker capability: ${capability}`);
+          await this.addCapability(capability);
+        }
+      }
+    } else {
+      for (const capability of dockerCapabilities) {
+        if (this.hasCapability(capability)) {
+          this.log(`Removing Docker capability (not available): ${capability}`);
+          await this.removeCapability(capability);
+        }
+      }
+    }
+
+    // Handle VM capabilities conditionally
+    if (hasVMs) {
+      for (const capability of vmCapabilities) {
+        if (!this.hasCapability(capability)) {
+          this.log(`Adding VM capability: ${capability}`);
+          await this.addCapability(capability);
+        }
+      }
+    } else {
+      for (const capability of vmCapabilities) {
+        if (this.hasCapability(capability)) {
+          this.log(`Removing VM capability (not available): ${capability}`);
+          await this.removeCapability(capability);
+        }
+      }
+    }
+
+    // Handle UPS capabilities conditionally
+    if (hasUPS) {
+      for (const capability of upsCapabilities) {
+        if (!this.hasCapability(capability)) {
+          this.log(`Adding UPS capability: ${capability}`);
+          await this.addCapability(capability);
+        }
+      }
+    } else {
+      for (const capability of upsCapabilities) {
+        if (this.hasCapability(capability)) {
+          this.log(`Removing UPS capability (not available): ${capability}`);
+          await this.removeCapability(capability);
+        }
       }
     }
   }
@@ -217,20 +291,56 @@ async onInit(): Promise<void> {
   private async initializeApiClient(): Promise<void> {
     const settings = this.getSettings() as DeviceSettings;
     const apiKey = this.getStoreValue('apiKey') as string;
+    const sslMode = this.getStoreValue('sslMode') as SslMode | undefined;
+    const resolvedUrl = this.getStoreValue('resolvedUrl') as string | undefined;
+    
+    // Get ports from store first (set during pairing), fall back to settings
+    const storedHttpPort = this.getStoreValue('httpPort') as number | undefined;
+    const storedHttpsPort = this.getStoreValue('httpsPort') as number | undefined;
+    const httpPort = storedHttpPort ?? (settings.httpPort !== 80 ? settings.httpPort : undefined);
+    const httpsPort = storedHttpsPort ?? (settings.httpsPort !== 443 ? settings.httpsPort : undefined);
 
     if (!settings.host || !apiKey) {
       throw new Error('Missing host or API key');
     }
 
-    this.apiConfig = {
-      host: settings.host,
-      apiKey,
-      port: settings.port || 443,
-      useHttps: settings.useHttps !== false,
-      timeout: 10000,
-    };
-
-    this.log('API client configured for', settings.host);
+    // If we have stored SSL settings from pairing, use them
+    if (sslMode && resolvedUrl) {
+      this.apiConfig = {
+        host: settings.host,
+        apiKey,
+        timeout: 10000,
+        sslMode,
+        resolvedUrl,
+        httpPort,
+        httpsPort,
+      };
+      this.log(`API client configured for ${settings.host} (SSL mode: ${sslMode})`);
+      if (httpPort || httpsPort) {
+        this.log(`Using custom ports - HTTP: ${httpPort || 80}, HTTPS: ${httpsPort || 443}`);
+      }
+    } else {
+      // Legacy device or missing SSL settings - re-discover
+      this.log('No stored SSL settings, discovering SSL mode...');
+      const discovered = await discoverSslMode(settings.host, {
+        httpPort,
+        httpsPort,
+        timeout: 10000,
+      });
+      
+      // Store the discovered settings for future use
+      await this.setStoreValue('sslMode', discovered.sslMode);
+      await this.setStoreValue('resolvedUrl', discovered.url);
+      
+      this.apiConfig = {
+        host: settings.host,
+        apiKey,
+        timeout: 10000,
+        sslMode: discovered.sslMode,
+        resolvedUrl: discovered.url,
+      };
+      this.log(`API client configured for ${settings.host} (discovered SSL mode: ${discovered.sslMode})`);
+    }
   }
 
   /**
@@ -238,6 +348,11 @@ async onInit(): Promise<void> {
    */
   private async initializePolling(): Promise<void> {
     const settings = this.getSettings() as DeviceSettings;
+
+    // Get feature availability from store
+    const hasDocker = this.getStoreValue('hasDocker') as boolean | undefined ?? true; // Default true for backward compatibility
+    const hasVMs = this.getStoreValue('hasVMs') as boolean | undefined ?? true;
+    const hasUPS = this.getStoreValue('hasUPS') as boolean | undefined ?? true;
 
     // Create Homey-compatible timer interface
     const homeyTimers: HomeyTimers = {
@@ -248,7 +363,7 @@ async onInit(): Promise<void> {
 
     this.pollManager = new PollManager(homeyTimers, (msg, ...args) => this.log(msg, ...args));
 
-    // Register system metrics poll (CPU, memory, temperature)
+    // Register system metrics poll (CPU, memory, temperature) - always enabled
     const systemInterval = (settings.systemPollInterval ?? 30) * 1000;
     this.pollManager.register(
       'system',
@@ -261,7 +376,7 @@ async onInit(): Promise<void> {
       },
     );
 
-    // Register storage poll (array status, capacity)
+    // Register storage poll (array status, capacity) - always enabled
     const storageInterval = (settings.storagePollInterval ?? 300) * 1000;
     this.pollManager.register(
       'storage',
@@ -274,48 +389,60 @@ async onInit(): Promise<void> {
       },
     );
 
-    // Register Docker containers poll
-    this.pollManager.register(
-      'docker',
-      () => this.pollDockerContainers(),
-      {
-        baseInterval: POLL_INTERVALS.DOCKER,
-        minInterval: POLL_INTERVALS.DOCKER,
-        maxInterval: 120000, // 2 minutes max
-        maxRetries: 3,
-      },
-    );
+    // Register Docker containers poll - only if Docker is available
+    if (hasDocker) {
+      this.pollManager.register(
+        'docker',
+        () => this.pollDockerContainers(),
+        {
+          baseInterval: POLL_INTERVALS.DOCKER,
+          minInterval: POLL_INTERVALS.DOCKER,
+          maxInterval: 120000, // 2 minutes max
+          maxRetries: 3,
+        },
+      );
+    } else {
+      this.log('Docker not available, skipping Docker polling');
+    }
 
-    // Register Virtual Machines poll
-    this.pollManager.register(
-      'vms',
-      () => this.pollVirtualMachines(),
-      {
-        baseInterval: POLL_INTERVALS.VMS,
-        minInterval: POLL_INTERVALS.VMS,
-        maxInterval: 120000, // 2 minutes max
-        maxRetries: 3,
-      },
-    );
+    // Register Virtual Machines poll - only if VMs are available
+    if (hasVMs) {
+      this.pollManager.register(
+        'vms',
+        () => this.pollVirtualMachines(),
+        {
+          baseInterval: POLL_INTERVALS.VMS,
+          minInterval: POLL_INTERVALS.VMS,
+          maxInterval: 120000, // 2 minutes max
+          maxRetries: 3,
+        },
+      );
+    } else {
+      this.log('VMs not available, skipping VM polling');
+    }
 
-    // Register UPS poll
-    this.pollManager.register(
-      'ups',
-      () => this.pollUPS(),
-      {
-        baseInterval: POLL_INTERVALS.SYSTEM_METRICS, // 30 seconds
-        minInterval: POLL_INTERVALS.SYSTEM_METRICS,
-        maxInterval: 60000, // 1 minute max
-        maxRetries: 3,
-      },
-    );
+    // Register UPS poll - only if UPS is available
+    if (hasUPS) {
+      this.pollManager.register(
+        'ups',
+        () => this.pollUPS(),
+        {
+          baseInterval: POLL_INTERVALS.SYSTEM_METRICS, // 30 seconds
+          minInterval: POLL_INTERVALS.SYSTEM_METRICS,
+          maxInterval: 60000, // 1 minute max
+          maxRetries: 3,
+        },
+      );
+    } else {
+      this.log('UPS not available, skipping UPS polling');
+    }
 
-    // Start polling
+    // Start polling for enabled features
     this.pollManager.start('system');
     this.pollManager.start('storage');
-    this.pollManager.start('docker');
-    this.pollManager.start('vms');
-    this.pollManager.start('ups');
+    if (hasDocker) this.pollManager.start('docker');
+    if (hasVMs) this.pollManager.start('vms');
+    if (hasUPS) this.pollManager.start('ups');
 
     this.log('Polling initialized');
   }
@@ -962,14 +1089,13 @@ async onInit(): Promise<void> {
       const runtime = ups.battery?.estimatedRuntime ?? null;
       const load = ups.power?.loadPercentage ?? null;
 
-      // Calculate power if we have load and UPS VA capacity from settings
-      // Power (W) = VA Rating * Load Percentage / 100 * Power Factor (typically ~0.6 for UPS)
+      // Calculate power if we have load and UPS nominal power from settings
+      // Power (W) = Nominal Power * Load Percentage / 100
       const settings = this.getSettings() as DeviceSettings;
-      const upsVaRating = settings.upsVaRating ?? 0;
+      const upsNominalPower = settings.upsNominalPower ?? 0;
       let power: number | null = null;
-      if (load !== null && upsVaRating > 0) {
-        // Use power factor of 0.6 (typical for computer loads)
-        power = Math.round((upsVaRating * load / 100) * 0.6);
+      if (load !== null && upsNominalPower > 0) {
+        power = Math.round(upsNominalPower * load / 100);
       }
 
       this.knownUPS = {
@@ -1783,8 +1909,21 @@ async onInit(): Promise<void> {
     this.log('Settings changed:', changedKeys);
 
     // If connection settings changed, reinitialize
-    if (changedKeys.includes('host') || changedKeys.includes('port') || changedKeys.includes('useHttps')) {
+    if (changedKeys.includes('host') || changedKeys.includes('httpPort') || changedKeys.includes('httpsPort') || changedKeys.includes('useHttps')) {
       this.log('Connection settings changed, reinitializing...');
+      
+      // Update stored ports if changed via settings
+      if (changedKeys.includes('httpPort') && typeof newSettings.httpPort === 'number') {
+        await this.setStoreValue('httpPort', newSettings.httpPort !== 80 ? newSettings.httpPort : undefined);
+      }
+      if (changedKeys.includes('httpsPort') && typeof newSettings.httpsPort === 'number') {
+        await this.setStoreValue('httpsPort', newSettings.httpsPort !== 443 ? newSettings.httpsPort : undefined);
+      }
+      
+      // Clear cached SSL settings to force re-discovery with new ports
+      await this.setStoreValue('sslMode', undefined);
+      await this.setStoreValue('resolvedUrl', undefined);
+      
       await this.initializeApiClient();
     }
 

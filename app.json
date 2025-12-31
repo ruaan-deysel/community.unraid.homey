@@ -1224,17 +1224,7 @@
         "storage_free",
         "parity_status",
         "disk_health",
-        "disk_temperature",
-        "containers_running",
-        "containers_total",
-        "vms_running",
-        "vms_total",
-        "ups_connected",
-        "ups_status",
-        "ups_battery",
-        "ups_load",
-        "ups_power",
-        "ups_runtime"
+        "disk_temperature"
       ],
       "capabilitiesOptions": {
         "measure_power": {
@@ -1286,13 +1276,26 @@
               }
             },
             {
-              "id": "port",
+              "id": "httpPort",
               "type": "number",
               "label": {
-                "en": "Port"
+                "en": "HTTP Port"
               },
               "hint": {
-                "en": "GraphQL API port (default: 443 for HTTPS)"
+                "en": "HTTP port for your Unraid server. Only change if using a reverse proxy."
+              },
+              "value": 80,
+              "min": 1,
+              "max": 65535
+            },
+            {
+              "id": "httpsPort",
+              "type": "number",
+              "label": {
+                "en": "HTTPS Port"
+              },
+              "hint": {
+                "en": "HTTPS port for your Unraid server. Only change if using a reverse proxy."
               },
               "value": 443,
               "min": 1,
@@ -1352,17 +1355,17 @@
           },
           "children": [
             {
-              "id": "upsVaRating",
+              "id": "upsNominalPower",
               "type": "number",
               "label": {
-                "en": "UPS VA Rating"
+                "en": "UPS Nominal Power (W)"
               },
               "hint": {
-                "en": "The VA (Volt-Ampere) rating of your UPS. Used to calculate power consumption from load percentage. Check your UPS manual for this value."
+                "en": "The nominal power rating of your UPS in Watts. Used to calculate power consumption from load percentage. Check your UPS specs for this value (e.g. 800W)."
               },
               "value": 0,
               "min": 0,
-              "max": 100000
+              "max": 10000
             }
           ]
         }

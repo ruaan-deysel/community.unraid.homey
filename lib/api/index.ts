@@ -5,8 +5,8 @@
  */
 
 // Client
-export { executeQuery, testConnection } from './client';
-export type { UnraidClientConfig, QueryResult } from './client';
+export { executeQuery, testConnection, discoverSslMode, clearSslDiscoveryCache } from './client';
+export type { UnraidClientConfig, QueryResult, SslMode, SslDiscoveryResult, SslDiscoveryOptions } from './client';
 
 // Queries
 export {

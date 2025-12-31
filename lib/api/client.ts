@@ -10,6 +10,42 @@ import {
 } from '../schemas/errors';
 
 /**
+ * SSL/TLS modes supported by Unraid servers
+ * - 'no': HTTP only, no SSL/TLS
+ * - 'yes': HTTPS with self-signed certificate (skip verification)
+ * - 'strict': HTTPS with valid Let's Encrypt certificate via myunraid.net
+ */
+export type SslMode = 'no' | 'yes' | 'strict';
+
+/**
+ * Result of SSL mode discovery
+ */
+export interface SslDiscoveryResult {
+  /** The resolved URL to use for API requests */
+  url: string;
+  /** The detected SSL mode */
+  sslMode: SslMode;
+  /** Whether to verify SSL certificates */
+  verifySsl: boolean;
+  /** Whether HTTPS is used */
+  useHttps: boolean;
+  /** Port number */
+  port: number;
+}
+
+/**
+ * Options for SSL mode discovery
+ */
+export interface SslDiscoveryOptions {
+  /** Custom HTTP port (default: 80) */
+  httpPort?: number;
+  /** Custom HTTPS port (default: 443) */
+  httpsPort?: number;
+  /** Connection timeout in ms (default: 10000) */
+  timeout?: number;
+}
+
+/**
  * Configuration for the Unraid API client
  */
 export interface UnraidClientConfig {
@@ -25,6 +61,14 @@ export interface UnraidClientConfig {
   port?: number;
   /** Allow self-signed certificates (default: true) */
   allowSelfSigned?: boolean;
+  /** SSL mode (detected during pairing) */
+  sslMode?: SslMode;
+  /** Resolved URL from discovery (cached) */
+  resolvedUrl?: string;
+  /** Custom HTTP port for discovery (default: 80) */
+  httpPort?: number;
+  /** Custom HTTPS port for discovery (default: 443) */
+  httpsPort?: number;
 }
 
 /**
@@ -35,8 +79,8 @@ export interface QueryResult<T> {
   errors?: Array<{ message: string }>;
 }
 
-// Cache for discovered redirect URLs
-const redirectUrlCache = new Map<string, string>();
+// Cache for discovered SSL settings
+const sslDiscoveryCache = new Map<string, SslDiscoveryResult>();
 
 /**
  * Create an error based on HTTP status code
@@ -109,21 +153,35 @@ function parseUrl(urlString: string): { hostname: string; port: number; protocol
 }
 
 /**
- * Discover redirect URL by making HTTP request to port 80
- * Unraid often redirects HTTP -> myunraid.net cloud URL
+ * Check if an error is SSL/certificate related
  */
-function discoverRedirectUrl(host: string, timeout: number): Promise<string | null> {
+function isSslError(error: Error): boolean {
+  const msg = error.message.toLowerCase();
+  return msg.includes('ssl') ||
+         msg.includes('certificate') ||
+         msg.includes('cert') ||
+         msg.includes('unable to verify') ||
+         msg.includes('self signed') ||
+         msg.includes('self-signed') ||
+         msg.includes('depth zero') ||
+         msg.includes('unable to get local issuer');
+}
+
+/**
+ * Make a simple HTTP GET request to check for redirects or connectivity
+ * Returns status code, redirect location, or error
+ */
+function probeHttp(
+  hostname: string,
+  port: number,
+  path: string,
+  timeout: number,
+): Promise<{ status: number; location?: string; error?: string }> {
   return new Promise((resolve) => {
-    // Skip if host is empty
-    if (!host || host.trim() === '') {
-      resolve(null);
-      return;
-    }
-    
     const options: http.RequestOptions = {
-      hostname: host.trim(),
-      port: 80,
-      path: '/graphql',
+      hostname,
+      port,
+      path,
       method: 'GET',
     };
     
@@ -132,38 +190,241 @@ function discoverRedirectUrl(host: string, timeout: number): Promise<string | nu
     // eslint-disable-next-line homey-app/global-timers
     const timeoutId = setTimeout(() => {
       if (req) req.destroy();
-      resolve(null);
+      resolve({ status: 0, error: 'timeout' });
     }, timeout);
     
     req = http.request(options, (res) => {
       clearTimeout(timeoutId);
-      
-      // Check for redirect
-      if (res.statusCode && [301, 302, 307, 308].includes(res.statusCode)) {
-        const { location } = res.headers;
-        if (location) {
-          // Validate the redirect URL is parseable and has a hostname
-          const parsed = parseUrl(location);
-          if (parsed && parsed.hostname && parsed.hostname.length > 0) {
-            // Check if it's a myunraid.net URL
-            if (parsed.hostname === 'myunraid.net' || parsed.hostname.endsWith('.myunraid.net')) {
-              resolve(location);
-              return;
-            }
-          }
-        }
-      }
-      
-      resolve(null);
+      resolve({
+        status: res.statusCode ?? 0,
+        location: res.headers.location,
+      });
+      res.resume(); // Consume response to free resources
     });
     
-    req.on('error', () => {
+    req.on('error', (err) => {
       clearTimeout(timeoutId);
-      resolve(null);
+      resolve({ status: 0, error: err.message });
     });
     
     req.end();
   });
+}
+
+/**
+ * Make a simple HTTPS GET request to check connectivity
+ * Returns status code or error
+ */
+function probeHttps(
+  hostname: string,
+  port: number,
+  path: string,
+  timeout: number,
+  rejectUnauthorized: boolean,
+): Promise<{ status: number; error?: string }> {
+  return new Promise((resolve) => {
+    const options: https.RequestOptions = {
+      hostname,
+      port,
+      path,
+      method: 'GET',
+      rejectUnauthorized,
+    };
+    
+    let req: http.ClientRequest | null = null;
+    
+    // eslint-disable-next-line homey-app/global-timers
+    const timeoutId = setTimeout(() => {
+      if (req) req.destroy();
+      resolve({ status: 0, error: 'timeout' });
+    }, timeout);
+    
+    req = https.request(options, (res) => {
+      clearTimeout(timeoutId);
+      resolve({ status: res.statusCode ?? 0 });
+      res.resume(); // Consume response to free resources
+    });
+    
+    req.on('error', (err) => {
+      clearTimeout(timeoutId);
+      resolve({ status: 0, error: err.message });
+    });
+    
+    req.end();
+  });
+}
+
+/**
+ * Discover SSL mode for an Unraid server
+ * 
+ * Detection algorithm:
+ * 1. Try HTTP request to httpPort (default 80)
+ *    - If redirect to myunraid.net -> Strict mode (valid cert)
+ *    - If redirect to HTTPS on same host -> Yes mode (self-signed)
+ *    - If HTTP works (2xx/4xx response) -> No mode
+ * 2. If HTTP fails, try HTTPS with cert verification on httpsPort (default 443)
+ *    - If works -> Strict mode
+ * 3. If HTTPS with verification fails with SSL error, try without verification
+ *    - If works -> Yes mode (self-signed)
+ * 
+ * @param host - Server hostname or IP
+ * @param options - Discovery options including custom ports and timeout
+ * @returns SSL discovery result with URL and settings
+ */
+export async function discoverSslMode(host: string, options: SslDiscoveryOptions | number = {}): Promise<SslDiscoveryResult> {
+  // Handle legacy signature where second param was timeout number
+  const opts: SslDiscoveryOptions = typeof options === 'number' 
+    ? { timeout: options }
+    : options;
+  
+  const timeout = opts.timeout ?? 10000;
+  const httpPort = opts.httpPort ?? 80;
+  const httpsPort = opts.httpsPort ?? 443;
+  
+  const cleanHost = host.trim();
+  
+  // Create cache key that includes ports
+  const cacheKey = `${cleanHost}:${httpPort}:${httpsPort}`;
+  
+  // Check cache first
+  const cached = sslDiscoveryCache.get(cacheKey);
+  if (cached) {
+    return cached;
+  }
+  
+  // Check if host is already a myunraid.net URL (Strict mode)
+  if (cleanHost === 'myunraid.net' || cleanHost.endsWith('.myunraid.net')) {
+    const portSuffix = httpsPort !== 443 ? `:${httpsPort}` : '';
+    const result: SslDiscoveryResult = {
+      url: `https://${cleanHost}${portSuffix}/graphql`,
+      sslMode: 'strict',
+      verifySsl: true,
+      useHttps: true,
+      port: httpsPort,
+    };
+    sslDiscoveryCache.set(cacheKey, result);
+    return result;
+  }
+  
+  // Step 1: Try HTTP to detect redirects (common for Yes and Strict modes)
+  const httpProbe = await probeHttp(cleanHost, httpPort, '/graphql', timeout);
+  
+  // Check for redirects
+  if (httpProbe.status && [301, 302, 307, 308].includes(httpProbe.status) && httpProbe.location) {
+    const parsed = parseUrl(httpProbe.location);
+    if (parsed && parsed.hostname) {
+      // Strict mode: redirect to myunraid.net
+      if (parsed.hostname === 'myunraid.net' || parsed.hostname.endsWith('.myunraid.net')) {
+        const baseUrl = `${parsed.protocol}://${parsed.hostname}${parsed.port !== 443 ? `:${parsed.port}` : ''}`;
+        const result: SslDiscoveryResult = {
+          url: `${baseUrl}/graphql`,
+          sslMode: 'strict',
+          verifySsl: true,
+          useHttps: true,
+          port: parsed.port,
+        };
+        sslDiscoveryCache.set(cleanHost, result);
+        return result;
+      }
+      
+      // Yes mode: redirect to HTTPS on same host (or any non-myunraid HTTPS)
+      if (parsed.protocol === 'https') {
+        const baseUrl = `${parsed.protocol}://${parsed.hostname}${parsed.port !== 443 ? `:${parsed.port}` : ''}`;
+        const result: SslDiscoveryResult = {
+          url: `${baseUrl}/graphql`,
+          sslMode: 'yes',
+          verifySsl: false, // Self-signed certificate
+          useHttps: true,
+          port: parsed.port,
+        };
+        sslDiscoveryCache.set(cleanHost, result);
+        return result;
+      }
+    }
+  }
+  
+  // No mode: HTTP responded without redirect (2xx, 4xx, or 5xx means endpoint is accessible)
+  if (httpProbe.status && httpProbe.status >= 200) {
+    const portSuffix = httpPort !== 80 ? `:${httpPort}` : '';
+    const result: SslDiscoveryResult = {
+      url: `http://${cleanHost}${portSuffix}/graphql`,
+      sslMode: 'no',
+      verifySsl: false,
+      useHttps: false,
+      port: httpPort,
+    };
+    sslDiscoveryCache.set(cacheKey, result);
+    return result;
+  }
+  
+  // Step 2: HTTP failed, try HTTPS with certificate verification (Strict mode check)
+  const httpsStrictProbe = await probeHttps(cleanHost, httpsPort, '/graphql', timeout, true);
+  
+  if (httpsStrictProbe.status && httpsStrictProbe.status >= 200) {
+    // HTTPS with valid cert works - this could be Strict mode or a custom setup
+    const portSuffix = httpsPort !== 443 ? `:${httpsPort}` : '';
+    const result: SslDiscoveryResult = {
+      url: `https://${cleanHost}${portSuffix}/graphql`,
+      sslMode: 'strict',
+      verifySsl: true,
+      useHttps: true,
+      port: httpsPort,
+    };
+    sslDiscoveryCache.set(cacheKey, result);
+    return result;
+  }
+  
+  // Step 3: HTTPS with verification failed - check if it's a cert error (Yes mode)
+  if (httpsStrictProbe.error && isSslError(new Error(httpsStrictProbe.error))) {
+    // Try without certificate verification
+    const httpsSelfSignedProbe = await probeHttps(cleanHost, httpsPort, '/graphql', timeout, false);
+    
+    if (httpsSelfSignedProbe.status && httpsSelfSignedProbe.status >= 200) {
+      // HTTPS works with self-signed cert - Yes mode
+      const portSuffix = httpsPort !== 443 ? `:${httpsPort}` : '';
+      const result: SslDiscoveryResult = {
+        url: `https://${cleanHost}${portSuffix}/graphql`,
+        sslMode: 'yes',
+        verifySsl: false,
+        useHttps: true,
+        port: httpsPort,
+      };
+      sslDiscoveryCache.set(cacheKey, result);
+      return result;
+    }
+  }
+  
+  // Default fallback: assume HTTPS with self-signed (most common Unraid setup)
+  const portSuffix = httpsPort !== 443 ? `:${httpsPort}` : '';
+  const result: SslDiscoveryResult = {
+    url: `https://${cleanHost}${portSuffix}/graphql`,
+    sslMode: 'yes',
+    verifySsl: false,
+    useHttps: true,
+    port: httpsPort,
+  };
+  sslDiscoveryCache.set(cacheKey, result);
+  return result;
+}
+
+/**
+ * Clear the SSL discovery cache for a specific host or all hosts
+ * When clearing for a specific host, removes all entries matching that host
+ * regardless of port configuration
+ */
+export function clearSslDiscoveryCache(host?: string): void {
+  if (host) {
+    const cleanHost = host.trim();
+    // Remove all cache entries that start with this host
+    // Cache keys are in format "host:httpPort:httpsPort"
+    for (const key of sslDiscoveryCache.keys()) {
+      if (key === cleanHost || key.startsWith(`${cleanHost}:`)) {
+        sslDiscoveryCache.delete(key);
+      }
+    }
+  } else {
+    sslDiscoveryCache.clear();
+  }
 }
 
 /**
@@ -276,7 +537,6 @@ export async function executeQuery<T>(
   schema: z.ZodType<T>,
 ): Promise<T> {
   const timeout = config.timeout ?? 10000;
-  const allowSelfSigned = config.allowSelfSigned !== false;
   const body = JSON.stringify({ query, variables });
   
   // Validate host is present
@@ -290,32 +550,20 @@ export async function executeQuery<T>(
   
   const host = config.host.trim();
   
-  // Check cache for redirect URL
-  const cacheKey = host;
-  let resolvedUrl = redirectUrlCache.get(cacheKey);
+  // Determine SSL settings - use provided config or discover
+  let resolvedUrl: string;
+  let allowSelfSigned: boolean;
   
-  // If no cached URL, try to discover redirect
-  if (!resolvedUrl) {
-    const redirectUrl = await discoverRedirectUrl(host, timeout);
-    if (redirectUrl) {
-      // Remove trailing path if present and add /graphql
-      const parsed = parseUrl(redirectUrl);
-      if (parsed) {
-        const baseUrl = `${parsed.protocol}://${parsed.hostname}${parsed.port !== 443 && parsed.port !== 80 ? `:${parsed.port}` : ''}`;
-        resolvedUrl = `${baseUrl}/graphql`;
-        redirectUrlCache.set(cacheKey, resolvedUrl);
-      }
-    }
-    
-    // If no redirect found, use direct URL
-    if (!resolvedUrl) {
-      const useHttps = config.useHttps !== false;
-      const protocol = useHttps ? 'https' : 'http';
-      const defaultPort = useHttps ? 443 : 80;
-      const port = config.port ?? defaultPort;
-      const portSuffix = (port === 443 && useHttps) || (port === 80 && !useHttps) ? '' : `:${port}`;
-      resolvedUrl = `${protocol}://${host}${portSuffix}/graphql`;
-    }
+  if (config.resolvedUrl) {
+    // Use pre-configured URL from pairing
+    resolvedUrl = config.resolvedUrl;
+    // If sslMode is 'strict', verify certs; otherwise allow self-signed
+    allowSelfSigned = config.sslMode !== 'strict';
+  } else {
+    // Discover SSL mode
+    const sslSettings = await discoverSslMode(host, timeout);
+    resolvedUrl = sslSettings.url;
+    allowSelfSigned = !sslSettings.verifySsl;
   }
   
   // Final validation of the URL
@@ -336,11 +584,10 @@ export async function executeQuery<T>(
     const MAX_REDIRECTS = 5;
     while (response.redirectUrl && redirectCount < MAX_REDIRECTS) {
       redirectCount++;
-      // Update cache with new redirect URL
+      // Update resolved URL
       const parsed = parseUrl(response.redirectUrl);
       if (parsed) {
         resolvedUrl = response.redirectUrl;
-        redirectUrlCache.set(cacheKey, resolvedUrl);
       }
       response = await makeHttpRequest(response.redirectUrl, body, config.apiKey, timeout, allowSelfSigned);
     }
@@ -489,9 +736,10 @@ export async function testConnectionDetailed(config: UnraidClientConfig): Promis
 
 /**
  * Clear the redirect URL cache (useful for testing or reconnection)
+ * @deprecated Use clearSslDiscoveryCache instead
  */
 export function clearRedirectCache(): void {
-  redirectUrlCache.clear();
+  sslDiscoveryCache.clear();
 }
 
 // =============================================================================
