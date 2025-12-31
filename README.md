@@ -1,4 +1,8 @@
-# Unraid Homey App
+[![GitHub Last Commit](https://img.shields.io/github/last-commit/ruaan-deysel/community.unraid.api)](https://github.com/ruaan-deysel/community.unraid.api/commits/main)
+[![License](https://img.shields.io/github/license/ruaan-deysel/community.unraid.api)](./LICENSE)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/ruaan-deysel/community.unraid.api)
+
+# Unraid API Homey App
 
 Monitor and control your Unraid server from Homey. The app polls Unraid's GraphQL API without waking disks from standby and provides tiles, flows, and alerts for system, storage, UPS, containers, and VMs.
 
